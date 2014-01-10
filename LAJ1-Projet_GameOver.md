@@ -54,6 +54,14 @@ tiendrez compte pour coder la suite.
 La deuxième version de votre application contiendra des fonctionnalités supplémentaires. Il
 est inutile de commencer la version 2 si la première version n'est ni fonctionnelle, ni évaluée.
 
+##Phase 4, défense orale
+À la date, c'est-à-dire jour et heure convenue avec votre professeur, vous devez effectuer
+une défense orale-machine de votre projet. Le projet est présenté et  défendu sur
+l'environnement linux1 qui est le seul environnement de développement considéré de votre projet.
+Ceci signifie que les professeurs considèrent que tout doit être fait, fonctionnel, maitrisable
+complétement par vous sur cet environnement linux1 à l'école.
+Tout ce qui est fait en dehors est de votre ressort personnel et ne sera pas évalué ni même considéré.
+
 ##Remises intermédiaires obligatoires
 En plus des échéances fixées, une remise hebdomadaire de votre travail est exigée. Vous
 déposerez votre projet dans le casier de votre professeur (acr) via la commande
@@ -116,4 +124,12 @@ alors la victoire.
 
 #Présentation des classes
 
+Cette présentation est une présentation sommaire des classes qui vont intervenir dans le
+projet afin de pouvoir travailler sur le plan de tests.  Une description détaillée est présentée plus loin.
+
+Nous allons distinguer la partie **métier** (business) de la partie **vue** (view) de l'application.
+Cette manière de distinguer les classes en fonction de leur rôle est un patron de développement appelé
+Modèle/Vue/Controleur (en anglais, design pattern Model/View/Controller). Vous allez approfondir celui-ci en
+deuxième année. Nous ne mettrons en œuvre ici qu'une première approche.
+[Une ](http://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur)
 
