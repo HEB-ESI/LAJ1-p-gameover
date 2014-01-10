@@ -131,5 +131,5 @@ Nous allons distinguer la partie **métier** (business) de la partie **vue** (vi
 Cette manière de distinguer les classes en fonction de leur rôle est un patron de développement appelé
 Modèle/Vue/Controleur (en anglais, design pattern Model/View/Controller). Vous allez approfondir celui-ci en
 deuxième année. Nous ne mettrons en œuvre ici qu'une première approche.
-[Une ](http://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur)
+[Modèle MVC : quelques informations](https://en.wikibooks.org/wiki/Computer_Science_Design_Patterns/Model%E2%80%93view%E2%80%93controller)
 
