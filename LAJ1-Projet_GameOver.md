@@ -37,6 +37,10 @@ Le projet se décompose en plusieurs phases. La première phase consiste à réf
 mettre en œuvre, tandis que les deux autres sont la réalisation des différentes versions de
 l'application.
 
+Ce n'est qu'au terme de la dernière phase, la défense orale que votre projet reçoit une cote.
+En d'autres termes, si vous ne défendez pas oralement votre projet, il vous sera attribué
+la cote zéro pour l'ensemble du projet.
+
 ##Phase 1, le plan de tests
 Dans un premier temps nous vous demandons de réfléchir à un plan de tests pour une
 méthode d'une classe particulière (voir XXXX).
@@ -133,3 +137,48 @@ Modèle/Vue/Controleur (en anglais, design pattern Model/View/Controller). Vous 
 deuxième année. Nous ne mettrons en œuvre ici qu'une première approche.
 [Modèle MVC : quelques informations](https://en.wikibooks.org/wiki/Computer_Science_Design_Patterns/Model%E2%80%93view%E2%80%93controller)
 
+(*** à développer plus tard avec un résumé de la liste des classes ci-dessous)
+
+La partie vue (view) concerne les classes qui s'occupent de la présentation et de l'interaction avec l'utilisateur.
+
+#Packages
+Dans ce projet, vous travaillerez dans 2 *packages*, chacun regroupant les classes d'une des
+parties définies ci-dessus.
+
+Les classes métiers (business) seront regroupées dans le package g12345.gameover.business
+
+Les classes de présentation (vue) seront regroupées dans le package g12345.gameover.view
+
+#Plan de test
+
+(*** sera précisé plus tard, après la définition des classes)
+
+#Les classes
+
+##Classe Position
+Cette classe représente une position dans le plateau de jeu, le Donjon. Une position a
+comme attribut
+* *column* : *int*, un entier positif représentant la colonne, comptée depuis le coin supérieur
+gauche (0) et dont la valeur maximale est 4,
+* *row* : *int*, un entier positif représentant la ligne, comptée depuis le coin supérieur
+gauche (0) et dont la valeur maximale est 4.
+
+###Méthodes
+Cette classe contient un constructeur à 2 paramètres (ligne,colonne) et les accesseurs *int getRow* et
+*int getColumn*.
+
+##Classe Player
+Cette classe représente un joueur (player). Un joueur a comme attribut
+* *name* : *String*, un nom
+* *n* : *int*, un numéro (entier positif de 0 à 3). Cette valeur sera utilisée pour identifier la couleur
+du joueur par rapport au jeu papier, et associer la princesse et la clé correspondante. Cet identifiant unique
+sera incrémenté automatiquement chaque fois que l'on crée une joueur.
+* *firsPosition* : *Position*, la position initiale de la première pièce où il passe. Cet attribut ne pourra
+qu'être lu.
+* *position* : *Position*
+
+###Méthodes
+Cette classe aura un constructeur à 2 paramètres : le nom et la position initiale, et les accesseurs *int getN*,
+*String getName*, *Position getFirstPosition* et *Position getPosition*.
+
+Elle aura aussi un mutateur *setPosition (column,row)*.
