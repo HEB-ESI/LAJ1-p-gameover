@@ -8,7 +8,8 @@ Le projet est une implémentation du jeu « Game Over » dans le cadre des labor
 
 ##Resources
 
-L'énoncé sera disponible ici.
+L'énoncé se trouve dans le fichier [LAJ1-Projet_GameOver.md]
+
 Les règles du jeu se trouvent
 
 * Le site [lahautroche] (http://www.lahauteroche.eu/gameover/gameover_home.html)
