@@ -8,7 +8,7 @@ Le projet est une implémentation du jeu « Game Over » dans le cadre des labor
 
 ##Ressources
 
-L'énoncé sera disponible ici.
+Le projet d'énoncé se trouve dans le fichier [LAJ1-Projet_GameOver.md]
 
 Les règles du jeu:
 
@@ -30,6 +30,7 @@ Les règles du jeu:
 ##Auteurs
 
 *Code* Pierre Bettens <pbettens@heb.be>
+*Énoncé* Nicolas Pettiaux <npettiaux@heb.be>
 
 
 
