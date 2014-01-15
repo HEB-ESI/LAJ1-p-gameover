@@ -175,10 +175,23 @@ du joueur par rapport au jeu papier, et associer la princesse et la clé corresp
 sera incrémenté automatiquement chaque fois que l'on crée une joueur.
 * *firsPosition* : *Position*, la position initiale de la première pièce où il passe. Cet attribut ne pourra
 qu'être lu.
-* *position* : *Position*
 
 ###Méthodes
 Cette classe aura un constructeur à 2 paramètres : le nom et la position initiale, et les accesseurs *int getN*,
-*String getName*, *Position getFirstPosition* et *Position getPosition*.
+*String getName*, *Position getFirstPosition*.
 
-Elle aura aussi un mutateur *setPosition (column,row)*.
+##Énumérarion WeaponType
+Cette énumération présente les 4 types possibles pour les armes. Elle a les valeurs suivantes :
+* POTION, une potion,
+* ARROWS, représentant un arc à flèches,
+* BLUDGEON, un gourdin,
+* GUN, une arme à feu.
+
+##Énumération SquareType
+Cette énumération présente les 4 types possibles que peuvent prendre les cartes, que nous
+appellerons ici *square*.
+
+* BLORK, un personnage armé,
+* PRINCESS, une princesse,
+* KEY, une clé,
+* GATE, une porte
