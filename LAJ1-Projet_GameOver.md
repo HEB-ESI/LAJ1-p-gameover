@@ -246,13 +246,33 @@ le joueur peut se trouver, d'où le nom. Elle a comme attribut :
 
 * *weapon* : *WeaponType*, le type d'armes  que l'élément du dongeon peut éventuellement porter,
 * *n* : *int*, un entier positif qui représente la couleur de la carte,
-* *hidden* : *booléen*, un paramètre qui indique si la carte a été retournée (vrai) ou si elle ne l'a
-pas encore été (faux). Ce paramètre est faux au début de la partie.
+* *hidden* : *booléen*, un paramètre qui indique si la carte est cachée (vrai) ou si elle  a été retournée et est donc visible (faux). Ce paramètre est donc vrai au début de la partie. 
 
 ###Méthodes
 Cette classe contient un constructeur à 4 paramètres *Room()* et définit les 4 attributs, les accesseurs *RoomType getType()*,
 *WeaponType  getWeapon()*, *boolean isHidden()* et *int getN(), et les mutateurs de chacun des attributs
 *void setType(RoomType)*, *void setWeapon(WeaponType)*, *void setHidden(booléen)*, *void setN(int)*.
+
+##Classe Dungeon
+Cette classe représente le donjon, c'est-à-dire le plateau de jeu. Elle a comme attributs :
+* *N=5*, une constante publique qui indique la taille d'un côté du plateau de jeu.
+* *Room[][] roomss*, un tableau à 2 dimensions qui contiendra la carte mélangées.
+
+###Méthodes
+La classe possède une constructeur sans paramètre *Dungeon()*. Celui-ci crée explicitement 
+les 25 pièces. Elles sont toutes initialement cachées. Celles-ci sont : 16 cartes de type BLORK séparées en 4 fois 4 avec chaque arme, sans couleur. Une de type GATE, sans couleur. Deux de type KEY, sans couleur.  Quatre de type PRINCESS, chacune d'une couleur. Et deux de type BLORK sans arme ni couleur qui seront les blorks invincibles. Une des manières de remplir le tableau *roomss* est de créer une liste de cartes, de les mélanger, puis dans 
+des boucles qui parcourent les éléments du tableau, d'enlever au fur et à mesure les éléments de cette liste et les mettre dans le tableau.
+
+Il y a encore les méthodes
+* *Room getRoom(DungeonPosition)*  qui renvoit le type de pièce à la position en paramètre, 
+* *void show(DungeonPosition)* qui modifie la valeur de l'attribut *hidden* d'une pièce
+pour qu'elle devienne visible. La valeur devient donc *faux*.
+* *void hideAll()* qui modifie pour toute les cartes du donjon les valeurs du paramètre
+*hidden* pour qu'elles soient à nouveau cachées.
+
+
+
+
 
 
 
