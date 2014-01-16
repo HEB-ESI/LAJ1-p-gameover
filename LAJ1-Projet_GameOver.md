@@ -145,7 +145,7 @@ La partie vue (view) concerne les classes qui s'occupent de la présentation et 
 Dans ce projet, vous travaillerez dans 2 *packages*, chacun regroupant les classes d'une des
 parties définies ci-dessus.
 
-Les classes métiers (business) seront regroupées dans le package g12345.gameover.business
+Les classes métiers (model) seront regroupées dans le package g12345.gameover.model
 
 Les classes de présentation (vue) seront regroupées dans le package g12345.gameover.view
 
@@ -155,17 +155,76 @@ Les classes de présentation (vue) seront regroupées dans le package g12345.gam
 
 #Les classes
 
-##Classe Position
-Cette classe représente une position dans le plateau de jeu, le Donjon. Une position a
-comme attribut
-* *column* : *int*, un entier positif représentant la colonne, comptée depuis le coin supérieur
-gauche (0) et dont la valeur maximale est 4,
-* *row* : *int*, un entier positif représentant la ligne, comptée depuis le coin supérieur
-gauche (0) et dont la valeur maximale est 4.
+##Classe GameOverException
+Cette classe est une exception controlée par le compilateur. Cette exception sera lancée dès que l'on demande
+à la partie model quelque chose d'incohérent.
 
 ###Méthodes
-Cette classe contient un constructeur à 2 paramètres (ligne,colonne) et les accesseurs *int getRow* et
-*int getColumn*. Elle réécrit également la méthode toString().
+Cette classe hérite de la classe Exception et a 1 constructeur : le constructeur à un paramètre de type *String*,
+qui décrit l'erreur qui s'est produite.
+
+##Énumération WeaponType
+Cette énumération présente les 4 types possibles pour les armes. Elle a les valeurs suivantes :
+* *POTION*, une potion,
+* *ARROWS*, représentant un arc à flèches,
+* *BLUDGEON*, un gourdin,
+* *GUN*, une arme à feu.
+
+##Énumération RoomType
+Cette énumération présente les 4 figures possibles que peuvent prendre les cartes, que nous
+appellerons ici *Room*.
+* *BLORK*, un personnage armé,
+* *PRINCESS*, une princesse,
+* *KEY*, une clé,
+* *GATE*, une porte
+
+##Énumération Direction
+Cette énumération définit les 4 types de déplacements possibles.
+* *UP*
+* *DOWN*
+* *RIGHT*
+* *LEFT*
+
+##Énumération FightResult
+On entend par fight, l'opération d'examiner la valeur de la carte retournée par le joueur. Comme vous le verrez
+ci-dessous, une carte est aussi vue dans le jeu comme une pièce (espace, en anglais «room») dans le dongeon.
+Les valeurs possibles sont :
+* *WIN*
+* *LOSE*
+* *PRINCESS*
+* *GATE*
+* *KEY*
+
+##Classe DungeonPosition
+Cette classe représente une position dans le plateau de jeu, le donjon. Une position a
+comme attribut
+* *column* : *int*, un entier positif représentant la colonne, comptée depuis le coin supérieur
+gauche (0) et dont la valeur maximale est taille du plateau-1,
+* *row* : *int*, un entier positif représentant la ligne, comptée depuis le coin supérieur
+gauche (0) et dont la valeur maximale est taille du plateau-1. Cette valeur de la taille du plateau
+est une constante publique de la classe Dungeon qui vaut 5.
+
+La classe définit aussi quatre variables constantes publiques, les positions initiales des joueurs sont définies.
+Ce sont P_BARBARIAN_1 à P_BARBARIAN_4. Celles-ci sont créés aux positions hors de la grille comme précisées
+dans les règles, en tournant dans le sens des aiguilles d'une montre pour les 4 barbares.
+
+###Méthodes
+Cette classe contient un constructeur à 2 paramètres (ligne, colonne). Les valeurs des paramètres sont vérifiées par le constructeur,
+et une *GameOverException* est lancée si un des paramètres n'est pas dans les bornes autorisées. Sont aussi présents,
+les accesseurs *int getRow* et *int getColumn*.
+
+Quatre méthodes publiques de déplacement sont ajoutées : les méthodes *DungeonPosition up()*, *DungeonPosition down()*,
+*DungeonPosition left()* et *DungeonPosition right()*. Elles renvoient respectivement des positions au dessus, en dessous,
+à gauche et à droite de la position courante.
+Ces 4 méthodes méthodes sont aussi utilisées dans la méthode *DungeonPosition move (Direction)* qui, en fonction de
+la direction en paramètre renvoit la nouvelle position dans le sens condiéré.
+
+Il y a encore 2 méthodes :
+* *boolean isAdjoining(DungeonPosition)* qui permet de voir si une position est adjacente, c'est à dire dans la même ligne
+et la colonne immédiatement voisine, ou la même colonne et la ligne immédiatement voisine.
+* *boolean isInDungeon()* qui permet de voir si la position est bien dans le plateau de jeu.
+
+Elle réécrit également la méthode toString().
 
 ##Classe Player
 Cette classe représente un joueur (player). Un joueur a comme attribut
@@ -180,33 +239,10 @@ qu'être lu.
 Cette classe aura un constructeur à 2 paramètres : le nom et la position initiale, et les accesseurs *int getN*,
 *String getName*, *Position getFirstPosition*. Elle réécrit également la méthode toString().
 
-##Énumérarion WeaponType
-Cette énumération présente les 4 types possibles pour les armes. Elle a les valeurs suivantes :
-* *POTION*, une potion,
-* *ARROWS*, représentant un arc à flèches,
-* *BLUDGEON*, un gourdin,
-* *GUN*, une arme à feu.
-
-##Énumération SquareType
-Cette énumération présente les 4 figures possibles que peuvent prendre les cartes, que nous
-appellerons ici *square*.
-* *BLORK*, un personnage armé,
-* *PRINCESS*, une princesse,
-* *KEY*, une clé,
-* *GATE*, une porte
-
-##Classe GameOverException
-Cette classe est une exception controlée par le compilateur. Cette exception sera lancée dès que l'on demande
-à la partie model quelque chose d'incohérent.
-
-###Méthodes
-Cette classe hérite de la classe Exception et a 1 constructeur : le constructeur à un paramètre de type *String*,
-qui décrit l'erreur qui s'est produite.
-
-##Classe Square
-Cette classe représente un élément du dongeon, le plateau de jeu. Nous le voyons comme un des places où
+##Classe Room
+Cette classe représente un élément du donjon, le plateau de jeu. Nous le voyons comme un des places où
 le joueur peut se trouver, d'où le nom. Elle a comme attribut :
-* *type* : *SquareType*, le type de figures que l'élément du dongeon peut éventuellement porter. Il sera *null* si
+* *type* : *RoomType*, le type de figures que l'élément du dongeon peut éventuellement porter. Il sera *null* si
 
 * *weapon* : *WeaponType*, le type d'armes  que l'élément du dongeon peut éventuellement porter,
 * *n* : *int*, un entier positif qui représente la couleur de la carte,
@@ -214,9 +250,10 @@ le joueur peut se trouver, d'où le nom. Elle a comme attribut :
 pas encore été (faux). Ce paramètre est faux au début de la partie.
 
 ###Méthodes
-Cette classe contient un constructeur à 4 paramètres *Square()* et définit les 4 attributs, les accesseurs *SquareType getType()*,
+Cette classe contient un constructeur à 4 paramètres *Room()* et définit les 4 attributs, les accesseurs *RoomType getType()*,
 *WeaponType  getWeapon()*, *boolean isHidden()* et *int getN(), et les mutateurs de chacun des attributs
-*void setType(SquareType)*, *void setWeapon(WeaponType)*, *void setHidden(booléen)*, *void setN(int)*.
+*void setType(RoomType)*, *void setWeapon(WeaponType)*, *void setHidden(booléen)*, *void setN(int)*.
+
 
 
 
