@@ -8,7 +8,7 @@ Le projet est une implémentation du jeu « Game Over » dans le cadre des labor
 
 ##Ressources
 
-Le projet d'énoncé se trouve dans le fichier [LAJ1-Projet_GameOver.md]
+[Le projet d'énoncé](LAJ1-Projet_GameOver.md)
 
 Les règles du jeu:
 
@@ -25,7 +25,15 @@ Les règles du jeu:
 
 ##Révisions
 
-*7 janvier 2014* Premier commit avec dépot d'un projet de diagramme de classes.
+*7 janvier 2014*
+Premier commit avec dépot d'un projet de diagramme de classes.
+
+*15 janvier 2014*
+Commit d'une première version du code non fonctionnelle.
+
+*16 janvier 2014*
+Commit d'une version écutable avec beaucoup de lacunes.
+L'interface est fonctionnelle mais hyper basique et ne permet pas de voir la pièce dans lequel on *s'est fait mourru* ! L'interface passe directement au joueur suivant (c'est un bug).
 
 ##Auteurs
 

@@ -42,7 +42,7 @@ public class Dungeon {
      * Je considère que le côté en haut à gauche est 0,0
      * Je ne donne pas de getter vers le tableau. Ce serait une
      */
-    private Room[][] squaress;
+    private Room[][] roomss;
     private static Dungeon instance = null;
 
     public static Dungeon getInstance(){
@@ -53,7 +53,7 @@ public class Dungeon {
     }
 
     private Dungeon() {
-        squaress = new Room[N][N];
+        roomss = new Room[N][N];
         Room[] cards = {
             new Room(RoomType.GATE, true, null, null),
             new Room(RoomType.KEY, true, null, null),
@@ -84,9 +84,10 @@ public class Dungeon {
         };
         List<Room> alCards = Arrays.asList(cards);
         Collections.shuffle(alCards);
-        for (int i = 0; i < squaress.length; i++) {
-            for (int j = 0; j < squaress[i].length; j++) {
-                squaress[i][j] = alCards.remove(alCards.size()-1);
+        for (int i = 0; i < roomss.length; i++) {
+            for (int j = 0; j < roomss[i].length; j++) {
+                //squaress[i][j] = alCards.remove(alCards.size()-1);
+                roomss[i][j] = alCards.get(i * roomss.length + j);
             }
         }
     }
@@ -100,7 +101,7 @@ public class Dungeon {
      * @return la carte en question
      */
     public Room getRoom(DungeonPosition p){
-        return squaress[p.getRow()][p.getColumn()];
+        return roomss[p.getRow()][p.getColumn()];
     }
 
     /**
@@ -112,7 +113,7 @@ public class Dungeon {
      * @param p la position de la pièce dans laquelle on entre     
      */
     public void show(DungeonPosition p){
-        Room room = squaress[p.getRow()][p.getColumn()];
+        Room room = roomss[p.getRow()][p.getColumn()];
         room.setHidden(false);
     }
 
@@ -120,7 +121,7 @@ public class Dungeon {
      * Cache toutes les pièces du donjon.
      */
     public void hideAll(){
-        for (Room[] squares : squaress) {
+        for (Room[] squares : roomss) {
             for (Room square : squares) {
                 square.setHidden(true);
             }

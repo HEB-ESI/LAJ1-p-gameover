@@ -20,6 +20,7 @@ import java.io.Console;
 import pbt.gameover.model.BarbarianColor;
 import pbt.gameover.model.Dungeon;
 import pbt.gameover.model.DungeonPosition;
+import pbt.gameover.model.Game;
 import pbt.gameover.model.GameOverException;
 import pbt.gameover.model.Player;
 import pbt.gameover.model.Room;
@@ -32,21 +33,39 @@ import static pbt.gameover.view.CouleurTerminal.*;
  * Classe utilitaire ne contenant que des méthodes permettant l'affichage en
  * texte des divers éléments du jeu.
  *
- * Remarque sur les caractères spéciaux
- * 𝄞 = U+1D11E	pas représentable en char
+ * Remarque sur les caractères spéciaux 𝄞 = U+1D11E	pas représentable en char
  *
- *   2/ Soustraire 0x10000 → 0xD11E
- *   1/ convertir en binaire 1101000100011110
- *   2/ 10 bits faibles 0100011110 = 11E
- *   3/ 10 bits forts 0000110100 = 34
- *   4/ Ajouter aux faibles DC00  → DC00 + 11E = DD1E
- *   5/ Ajouter aux forts D800 → D800 + 34 = D834
+ * 2/ Soustraire 0x10000 → 0xD11E 1/ convertir en binaire 1101000100011110 2/ 10
+ * bits faibles 0100011110 = 11E 3/ 10 bits forts 0000110100 = 34 4/ Ajouter aux
+ * faibles DC00 → DC00 + 11E = DD1E 5/ Ajouter aux forts D800 → D800 + 34 = D834
+ *
+ * Remarque au sujet de la méthode readLine Dans une classe dédiée à
+ * l'affichage, c'est dommage d'ajouter une méthode qui fait une lecture … mais
+ * ça m'évite de définir deux fois une console. Je ne sais pas ce qui est le
+ * mieux ?
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
 public class Display {
 
     private static final Console CONSOLE = System.console();
+
+    private static final String CLEAR = "\033[2J";
+
+    // Caractières spéciaux pour marquer les entrées dans le donjon
+    // http://www.unicode.org/charts/PDF/U2900.pdf
+    private static final String ENTRY_UP_DOWN = "\u294E";
+    private static final String ENtRY_DOWN_UP = "\u2950";
+    private static final String ENTRY_LEFT_RIGHT = "\u2951";
+    private static final String ENTRY_RIGHT_LEFT = "\u294F";
+
+    private static final String CHAR_POTION = "1";
+    private static final String CHAR_ARROW = "2";
+    private static final String CHAR_BLUDGEON = "3";
+    private static final String CHAR_GUN = "4";
+
+    private static final String CHAR_PRINCESS = "\u263A";// "\u2655";
+    private static final String CHAR_KEY = "\u26BF";
 
     static {
         if (CONSOLE == null) {
@@ -65,20 +84,43 @@ public class Display {
     }
 
     /**
-     * Affiche le donjon.
+     * Affiche le donjon et les barbares à leur position initiale.
      *
      * @param d le donjon
      */
-    public static void display(Dungeon d) {        
+    public static void display(Dungeon d) {
         Room room;
         try {
+            // Ne pas oublier d'ajouter les entrées dans le donjon DONE
+            CONSOLE.printf(RED + "  " + ENTRY_UP_DOWN + DEFAULT + "\n");
             for (int i = 0; i < Dungeon.N; i++) {
+                if (i == Dungeon.N - 1) {
+                    CONSOLE.printf(YELLOW + ENTRY_LEFT_RIGHT + DEFAULT);
+                }
+                if (i != Dungeon.N - 1) {
+                    CONSOLE.printf(" ");
+                }
                 for (int j = 0; j < Dungeon.N; j++) {
                     room = d.getRoom(new DungeonPosition(i, j));
+                    if (j != 0) {
+                        CONSOLE.printf(" ");
+                    }
                     display(room);
+                    if (j != Dungeon.N - 1) {
+                        CONSOLE.printf(" ");
+                    }
+                }
+                if (i == 0) {
+                    CONSOLE.printf(GREEN + ENTRY_RIGHT_LEFT + DEFAULT);
+                }
+                if (i != Dungeon.N - 1) {
+                    CONSOLE.printf("\n");
                 }
                 CONSOLE.printf("\n");
-            }
+            }            
+            CONSOLE.printf(BLUE + "                      "
+                    + ENtRY_DOWN_UP + DEFAULT);
+            CONSOLE.printf("\n");
         } catch (GameOverException e) {
             CONSOLE.printf("Tentative d'affichage de pièces hors donjon !"
                     + "\nEnvoyer rapport de bug … ");
@@ -87,52 +129,93 @@ public class Display {
     }
 
     public static void display(Player p) {
-
+        String s = "";
+        switch (p.getColor()) {
+            case RED:
+                s += RED + "Joueur rouge ";
+                break;
+            case GREEN:
+                s += GREEN + "Joueur vert ";
+                break;
+            case BLUE:
+                s += BLUE + "Joueur bleu ";
+                break;
+            case YELLOW:
+                s += YELLOW + "Joueur jaune ";
+                break;
+        }
+        s += p.getName() + DEFAULT + "\n";
+        CONSOLE.printf(s);
     }
 
     public static void display(String s) {
-
+        CONSOLE.printf(s);
     }
 
-    public static void display(Room r){
-        String s = "";
-        if (r.getColor() != null) {
-            switch (r.getColor()){
-                case RED: s += CouleurTerminal.RED; break;
-                case GREEN: s += CouleurTerminal.GREEN; break;
-                case BLUE: s += CouleurTerminal.BLUE; break;
-                case YELLOW: s += CouleurTerminal.YELLOW; break;
-            }
+    public static void display(Room r) {
+        String s = " ";        
+        if (r.isHidden()) {
+            s = " \u26BF ";
         } else {
-            s += CouleurTerminal.GREY;
-        }
-        switch (r.getType()){
-            case BLORK: s += "B"; break;
-            case GATE: s += "G"; break;
-            case KEY: s += "K"; break;
-            case PRINCESS: s += "P";
-        }
-        s += "" + CouleurTerminal.DEFAULT + CouleurTerminal.WHITE;
-        if (r.getWeapon() != null) {
-            /*
-             * Pour les caractères spéciaux,
-             * voir « formules » en début de classe
-             * PISTOL u+1F52B (F52B = 111101 0100101011 → D83D DD2B)
-             * ARROWS u+2B31
-             * BLUDGEON u+1F364 (F364 = 111100 1101100100 → D83C DF64
-            */
-            switch (r.getWeapon()){
-                case ARROWS: s += "\u2B31";
-                    break;
-                case BLUDGEON: s += "\u2680";
-                    break;
-                case GUN:s += "g"; //\uD83D\uDD2B";
-                    break; //D834, DD1E
-                case POTION: s += "\u2620";
-                    break;
+            if (r.getColor() != null) {
+                switch (r.getColor()) {
+                    case RED:
+                        s += CouleurTerminal.RED;
+                        break;
+                    case GREEN:
+                        s += CouleurTerminal.GREEN;
+                        break;
+                    case BLUE:
+                        s += CouleurTerminal.BLUE;
+                        break;
+                    case YELLOW:
+                        s += CouleurTerminal.YELLOW;
+                        break;
+                }
+            } else {
+                s += CouleurTerminal.GREY;
             }
+            switch (r.getType()) {
+                case BLORK:
+                    s += "B";
+                    break;
+                case GATE:
+                    s += "G";
+                    break;
+                case KEY:
+                    s += CHAR_KEY; //"K";
+                    break;
+                case PRINCESS:
+                    s += CHAR_PRINCESS; //"P";
+            }
+            s += "" + CouleurTerminal.DEFAULT + CouleurTerminal.WHITE;
+            if (r.getWeapon() != null) {
+                /*
+                 * Pour les caractères spéciaux,
+                 * voir « formules » en début de classe
+                 * PISTOL u+1F52B (F52B = 111101 0100101011 → D83D DD2B)
+                 * ARROWS u+2B31
+                 * BLUDGEON u+1F364 (F364 = 111100 1101100100 → D83C DF64
+                 */
+                switch (r.getWeapon()) {
+                    case ARROWS:
+                        s += CHAR_ARROW;
+                        break;
+                    case BLUDGEON:
+                        s += CHAR_BLUDGEON;
+                        break;
+                    case GUN:
+                        s += CHAR_GUN;
+                        break;
+                    case POTION:
+                        s += CHAR_POTION;
+                        break;
+                }
+            } else {
+                s += " ";
+            }
+            s += CouleurTerminal.DEFAULT;
         }
-        s += CouleurTerminal.DEFAULT;
         CONSOLE.printf(s);
     }
 
@@ -140,20 +223,24 @@ public class Display {
         if (winner == null) {
             CONSOLE.printf("Pas de gagnant");
         } else {
-            CONSOLE.printf("Le gagnant est ");
+            CONSOLE.printf("Le gagnant est %s", winner.getName());
         }
     }
 
-    public static void main(String[] args) {
-        CONSOLE.printf("\n");
-        display(new Room(RoomType.BLORK, false, WeaponType.GUN, BarbarianColor.RED));
-        CONSOLE.printf("\n");
-        display(new Room(RoomType.BLORK, false, WeaponType.POTION, BarbarianColor.GREEN));
-        CONSOLE.printf("\n");
-        display(new Room(RoomType.BLORK, false, WeaponType.ARROWS, BarbarianColor.GREEN));
-        CONSOLE.printf("\n");
-        display(new Room(RoomType.BLORK, false, WeaponType.BLUDGEON, BarbarianColor.GREEN));
-        CONSOLE.printf("\n");
+    public static void clear() {
+        CONSOLE.printf(CLEAR);
+    }
+
+    public static void main(String[] args) {        
+        try {
+            Game g = new Game();
+            display(g.getCurrentPlayer());
+            display(g.getDungeon());
+        } catch (GameOverException e) {
+            System.err.printf("Error + (%s)", e.getMessage());
+            System.exit(1);
+        }
+
     }
 
 }

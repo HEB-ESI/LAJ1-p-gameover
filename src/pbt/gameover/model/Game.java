@@ -43,10 +43,28 @@ public class Game {
      */
     private boolean findKey;
     private boolean findPrincess;
+    /*
+     * Je dois mémoriser si la partie est en cours
+    */
+    private boolean turnInProgress;
     /* La partie est finie dès qu'une princesse est trouvée, idWinner
      * passe de -1 à l'id du gagnant
      */
     private int idWinner;
+
+    /*
+     * Pour faciliter le passage au joueur suivant
+    */
+    private final DungeonPosition[] POSITIONS = {
+        DungeonPosition.P_BARBARIAN_1,
+        DungeonPosition.P_BARBARIAN_2,
+        DungeonPosition.P_BARBARIAN_3,
+        DungeonPosition.P_BARBARIAN_4
+    };
+
+    public Game() throws GameOverException{
+        this("Juste", "Pierre", "Marlène", "François");
+    }
 
     public Game(String... names) throws GameOverException {
         if (names.length < 2 || names.length > 4) {
@@ -60,9 +78,10 @@ public class Game {
         }
         dungeon = Dungeon.getInstance();
         idCurrent = 0;
-        lastPosition = DungeonPosition.P_BARBARIAN_1;
+        lastPosition = POSITIONS[idCurrent];
         findKey = false;
         findPrincess = false;
+        turnInProgress = false;
         idWinner = -1;          // Pas de gagnant
     }
 
@@ -75,6 +94,10 @@ public class Game {
     public Player getCurrentPlayer(){
         // Je sais que idCurrent est tjs valide.
         return players.get(idCurrent);
+    }
+
+    public boolean isTurnInProgress() {
+        return turnInProgress;
     }
 
 
@@ -115,10 +138,14 @@ public class Game {
             throw new GameOverException("La partie est finie");
         }
         // La partie n'est pas finie
-        DungeonPosition newPosition;
+        turnInProgress = true;
+        DungeonPosition newPosition;        
         newPosition = lastPosition.move(d);
         dungeon.show(newPosition);
         Room room = dungeon.getRoom(newPosition);
+        // Je mets déjà à jour ma position pour le tour suivant 
+        // (elle changera peut-être si je meurs !)
+        lastPosition = newPosition;
         switch (room.getType()) {
             case GATE:
                     // On ne fait rien dans la v1
@@ -135,12 +162,11 @@ public class Game {
                 // Si blorkWeakness vaut null, c'est un blork invincible
                 // ce sera pour la v2
                 // @todo v2
-                if (blorkWeakness != wt) {
+                if (blorkWeakness != wt) {                    
                     nextPlayer();
                 }
             default:
-        }
-        lastPosition = newPosition;
+        }        
     }
 
     private void checkIfIWin() {
@@ -149,10 +175,13 @@ public class Game {
         }
     }
 
-    private void nextPlayer(){
+    private void nextPlayer(){        
         idCurrent = ++idCurrent % players.size();
         findKey = false;
         findPrincess = false;
+        lastPosition = POSITIONS[idCurrent];
+        turnInProgress = false;
+        dungeon.hideAll();
     }
 
 

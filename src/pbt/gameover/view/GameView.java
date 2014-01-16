@@ -47,8 +47,8 @@ public class GameView {
     static {
         CHAR_DIRECTIONS.put('u', Direction.UP);
         CHAR_DIRECTIONS.put('r', Direction.RIGHT);
-        CHAR_DIRECTIONS.put('l', Direction.DOWN);
-        CHAR_DIRECTIONS.put('d', Direction.LEFT);
+        CHAR_DIRECTIONS.put('d', Direction.DOWN);
+        CHAR_DIRECTIONS.put('l', Direction.LEFT);
     }
 
     public static void main(String[] args) {
@@ -63,8 +63,13 @@ public class GameView {
 
         // On joue
         while (!game.isOver()) {
-            display(game.getDungeon());
+            if (!game.isTurnInProgress()) {
+                display("Appuie sur une ENTER …\n");
+                readLine();
+            }
+            clear();
             display(game.getCurrentPlayer());
+            display(game.getDungeon());            
             // Demander le mouvement
             String s;
             do {
@@ -72,19 +77,23 @@ public class GameView {
                         + "u = UP, d = DOWN, l = LEFT, r = RIGHT, 0 = EXIT\n"
                         + "1 = potion magique, 2 = flèches, "
                         + "3 = massue, 4 = revolver\n\n"
-                        + "Par exemple: u2");
+                        + "Par exemple: u2\n\n"
+                        + "→ ");
                 s = readLine();
             } while (!s.matches("[udlr0]{1}[1234]{0,1}"));
             char move = s.charAt(0);
             if (move == '0') {
                 System.exit(0);
             }
-            int weapon = Integer.parseInt("" + s.charAt(1));
-            try {
-                game.play(CHAR_DIRECTIONS.get(move), WEAPONS[weapon]);
+            int weapon = Integer.parseInt("" + s.charAt(1)) - 1;
+            try {                
+                Direction d = CHAR_DIRECTIONS.get(move);
+                WeaponType wt = WEAPONS[weapon];
+                display("On tente la direction " + d + " avec " + wt + "\n");
+                game.play(d,wt);
             } catch (GameOverException ex) {
-                display("Erreur\n\t" + ex.getMessage() + "\n");
-                break;
+                display("Erreur (" + ex.getMessage() + ")\n");
+                continue;
                 // Je m'autorise un break pour réitérer
             }
         }
