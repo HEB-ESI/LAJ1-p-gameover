@@ -165,7 +165,7 @@ gauche (0) et dont la valeur maximale est 4.
 
 ###Méthodes
 Cette classe contient un constructeur à 2 paramètres (ligne,colonne) et les accesseurs *int getRow* et
-*int getColumn*.
+*int getColumn*. Elle réécrit également la méthode toString().
 
 ##Classe Player
 Cette classe représente un joueur (player). Un joueur a comme attribut
@@ -178,20 +178,49 @@ qu'être lu.
 
 ###Méthodes
 Cette classe aura un constructeur à 2 paramètres : le nom et la position initiale, et les accesseurs *int getN*,
-*String getName*, *Position getFirstPosition*.
+*String getName*, *Position getFirstPosition*. Elle réécrit également la méthode toString().
 
 ##Énumérarion WeaponType
 Cette énumération présente les 4 types possibles pour les armes. Elle a les valeurs suivantes :
-* POTION, une potion,
-* ARROWS, représentant un arc à flèches,
-* BLUDGEON, un gourdin,
-* GUN, une arme à feu.
+* *POTION*, une potion,
+* *ARROWS*, représentant un arc à flèches,
+* *BLUDGEON*, un gourdin,
+* *GUN*, une arme à feu.
 
 ##Énumération SquareType
-Cette énumération présente les 4 types possibles que peuvent prendre les cartes, que nous
+Cette énumération présente les 4 figures possibles que peuvent prendre les cartes, que nous
 appellerons ici *square*.
+* *BLORK*, un personnage armé,
+* *PRINCESS*, une princesse,
+* *KEY*, une clé,
+* *GATE*, une porte
 
-* BLORK, un personnage armé,
-* PRINCESS, une princesse,
-* KEY, une clé,
-* GATE, une porte
+##Classe GameOverException
+Cette classe est une exception controlée par le compilateur. Cette exception sera lancée dès que l'on demande
+à la partie model quelque chose d'incohérent.
+
+###Méthodes
+Cette classe hérite de la classe Exception et a 1 constructeur : le constructeur à un paramètre de type *String*,
+qui décrit l'erreur qui s'est produite.
+
+##Classe Square
+Cette classe représente un élément du dongeon, le plateau de jeu. Nous le voyons comme un des places où
+le joueur peut se trouver, d'où le nom. Elle a comme attribut :
+* *type* : *SquareType*, le type de figures que l'élément du dongeon peut éventuellement porter. Il sera *null* si
+
+* *weapon* : *WeaponType*, le type d'armes  que l'élément du dongeon peut éventuellement porter,
+* *n* : *int*, un entier positif qui représente la couleur de la carte,
+* *hidden* : *booléen*, un paramètre qui indique si la carte a été retournée (vrai) ou si elle ne l'a
+pas encore été (faux). Ce paramètre est faux au début de la partie.
+
+###Méthodes
+Cette classe contient un constructeur à 4 paramètres *Square()* et définit les 4 attributs, les accesseurs *SquareType getType()*,
+*WeaponType  getWeapon()*, *boolean isHidden()* et *int getN(), et les mutateurs de chacun des attributs
+*void setType(SquareType)*, *void setWeapon(WeaponType)*, *void setHidden(booléen)*, *void setN(int)*.
+
+
+
+
+
+
+
