@@ -32,12 +32,15 @@ Premier commit avec dépot d'un projet de diagramme de classes.
 Commit d'une première version du code non fonctionnelle.
 
 *16 janvier 2014*
-Commit d'une version écutable avec beaucoup de lacunes.
+Commit d'une version éxécutable avec beaucoup de lacunes.
 L'interface est fonctionnelle mais hyper basique et ne permet pas de voir la pièce dans lequel on *s'est fait mourru* ! L'interface passe directement au joueur suivant (c'est un bug).
+*18 janvier 2014*
+Interface fonctionnelle. 
+Petite modification de la logique au niveax de la méthode `Game.play`
 
 ##Auteurs
 
-*Code* Pierre Bettens <pbettens@heb.be>
+*Code* Pierre Bettens <pbettens@heb.be>  
 *Énoncé* Nicolas Pettiaux <npettiaux@heb.be>
 
 

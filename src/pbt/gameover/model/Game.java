@@ -33,9 +33,10 @@ public class Game {
     private List<Player> players;
     /* L'identifiant du jouer courant (0 basé) */
     private int idCurrent;
-    /* La dernière postition du joueur courant.
+    /* La dernière position du joueur courant.
      * Si c'est son premier mouvement dans ce tour,
-     * sa position est sa position de départ.
+     * sa position est sa position de départ
+     * (cette position de départ est « hors donjon »)
      */
     private DungeonPosition lastPosition;
     /*
@@ -44,7 +45,8 @@ public class Game {
     private boolean findKey;
     private boolean findPrincess;
     /*
-     * Je dois mémoriser si la partie est en cours
+     * Je dois mémoriser si la partie est en cours (si c'est un barbare dans
+     * le donjon ou bien s'il vient de mourir et qu'il faut passer au suivant)
     */
     private boolean turnInProgress;
     /* La partie est finie dès qu'une princesse est trouvée, idWinner
@@ -131,9 +133,11 @@ public class Game {
      * qui retourne une tuile supplémentaire.
      * @param d la direction prise par le barbare.
      * @param wt l'arme choisie
+     * @return true si le barbare n'est pas mort, false sinon !
      * @throws pbt.gameover.model.GameOverException
      */
-    public void play(Direction d, WeaponType wt)throws GameOverException{
+    public boolean play(Direction d, WeaponType wt)throws GameOverException{
+        boolean isWin = true;
         if (idWinner != -1) {
             throw new GameOverException("La partie est finie");
         }
@@ -163,10 +167,12 @@ public class Game {
                 // ce sera pour la v2
                 // @todo v2
                 if (blorkWeakness != wt) {                    
-                    nextPlayer();
+                    //nextPlayer();
+                    isWin = false;
                 }
             default:
-        }        
+        }
+        return isWin;
     }
 
     private void checkIfIWin() {
@@ -175,7 +181,7 @@ public class Game {
         }
     }
 
-    private void nextPlayer(){        
+    public void nextPlayer(){
         idCurrent = ++idCurrent % players.size();
         findKey = false;
         findPrincess = false;
