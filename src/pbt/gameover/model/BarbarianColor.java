@@ -18,7 +18,7 @@
 package pbt.gameover.model;
 
 /**
- *
+ * Les couleurs des joueurs, et donc des petits barbares et des princesses.
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
 public enum BarbarianColor {

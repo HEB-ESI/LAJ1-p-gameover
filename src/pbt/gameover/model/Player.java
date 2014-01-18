@@ -19,6 +19,12 @@ package pbt.gameover.model;
 
 
 /**
+ * Représente un joueur.
+ *
+ * Un joueur représente un petit barbare, il a une couleur et une position de
+ * départ (porte d'entrée dans le donjon) qu'il ne peut pas choisir.
+ *
+ * Il a également un nom.
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
@@ -41,26 +47,55 @@ public class Player {
     private final DungeonPosition initPosition;
     private String name;
 
-    public Player() throws GameOverException {
+    /**
+     * Un joueur du jeu.
+     * @param aName le nom du joueur (destiné à l'interface graphique)
+     * @throws GameOverException
+     */
+    public Player(String aName) throws GameOverException {
         if (n > 4) throw new GameOverException("Trop de joueurs");
-        name = "Anonym";
+        name = aName;
         color = COLORS[n];
         initPosition = POSITIONS[n];
         n++;
     }
 
+    /**
+     * Un joueur
+     * @throws GameOverException
+     */
+    public Player() throws GameOverException {
+        this("Anonym");
+    }
+
+    /**
+     * Getter couleur
+     * @return la couleur
+     */
     public BarbarianColor getColor() {
         return color;
     }
 
+    /**
+     * Getter de la position initiale (la porte d'entrée)
+     * @return la position initiale du petit barbare
+     */
     public DungeonPosition getInitPosition() {
         return initPosition;
     }
 
+    /**
+     * Getter du nom.
+     * @return le nom
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Setter du nom.
+     * @param name le nom du joueur
+     */
     public void setName(String name) {
         this.name = name;
     }

@@ -31,16 +31,23 @@ package pbt.gameover.model;
  */
 public class Room {
 
-    private RoomType type;    /* Le type représenté sur la carte */
+    private RoomType type;      /* Le type représenté sur la carte */
     private boolean hidden;     /* La carte est-elle cachée ? */
     private WeaponType weapon;  /* Le type d'arme permettan de vaincre le blork
                                    si c'est un blork (null sinon) */
     private BarbarianColor color;        /* La couleur de la carte s'il y a lieu
-                                   (princesse) */
+                                        (princesse) */
 
-    public Room(RoomType type, boolean hidden,
-            WeaponType weapon, BarbarianColor color) {
-        // @todo éventuellement remplacer par les setters
+    /**
+     * Constructeur d'une pièce du jeu.
+     * @param type qui se cache dans la pièce du donjon ?
+     * @param hidden précise si la carte est face cachée ou pas
+     * @param weapon l'arme permettant de tuer le blork
+     * (si c'en est un, null sinon)
+     * @param color la couleur si c'est une princesse, null sinon
+     */
+    Room(RoomType type, boolean hidden,
+            WeaponType weapon, BarbarianColor color) {        
         this.type = type;
         this.hidden = hidden;
         this.weapon = weapon;

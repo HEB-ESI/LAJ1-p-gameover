@@ -18,7 +18,9 @@
 package pbt.gameover.model;
 
 /**
+ * Les directions dans lesquelles peuvent se déplacer les barbares.
  *
+ * Ces directions détermineront les mouvements. 
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
 public enum Direction {

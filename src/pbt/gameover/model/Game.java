@@ -64,10 +64,23 @@ public class Game {
         DungeonPosition.P_BARBARIAN_4
     };
 
+    /**
+     * Un constructeur sans paramètre pour créer une partie sans choix de
+     * prénoms.
+     *
+     * Les prénoms sont imposés; Juste, Pierre, Marlène et François
+     * @throws GameOverException
+     */
     public Game() throws GameOverException{
         this("Juste", "Pierre", "Marlène", "François");
     }
 
+    /**
+     * Constructeur d'une partie de « Game Over ».
+     *
+     * @param names les prénoms des joueurs
+     * @throws GameOverException
+     */
     public Game(String... names) throws GameOverException {
         if (names.length < 2 || names.length > 4) {
             throw new GameOverException("Il faut 2,3 ou 4 joueurs");
@@ -87,22 +100,34 @@ public class Game {
         idWinner = -1;          // Pas de gagnant
     }
 
+    /**
+     * Getter du donjon
+     * @return le donjon
+     */
     public Dungeon getDungeon() {
         //@todo v2 Dungeon devrait être clonebale et je devrais renvoyer une
         // copie. aucune raison que la vue ne modifie mon donjon ! 
         return dungeon;
     }
 
+    /**
+     * Getter le joueur courant.
+     * @return le joueur courant
+     */
     public Player getCurrentPlayer(){
         // Je sais que idCurrent est tjs valide.
         return players.get(idCurrent);
     }
 
+    /**
+     * Précise si un barbare est dans la place ou s'il faut passer au joueur
+     * suivant.
+     *
+     * @return vrai si un barbare est dans le donjon
+     */
     public boolean isTurnInProgress() {
         return turnInProgress;
     }
-
-
 
     /**
      * Précise si la partie est finie.
@@ -181,6 +206,9 @@ public class Game {
         }
     }
 
+    /**
+     * Permet de passer au joueur suivant dès que c'est « Game Over ».
+     */
     public void nextPlayer(){
         idCurrent = ++idCurrent % players.size();
         findKey = false;
