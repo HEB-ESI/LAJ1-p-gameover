@@ -153,6 +153,9 @@ Les classes de présentation (vue) seront regroupées dans le package g12345.gam
 
 (*** sera précisé plus tard, après la définition des classes)
 
+#GameOver, version 1
+Dans cette première version de l'application, nous gèrerons l'inscription et le jeu de base. En particulier, nous ne nous occuperons pas des déplacements lorsqu'une carte GATE (porte) est identifiée ni de ce qui se passe lorsqu'un blork invincible est rencontré. Ces 2 cas seront laissés pour la version 2.
+
 #Les classes
 
 Ce premier ensemble de classes font partie du modèle.
@@ -196,7 +199,7 @@ Cette énumération définit les 4 types de déplacements possibles.
 * *LEFT*
 
 ##Énumération FightResult
-On entend par fight, l'opération d'examiner la valeur de la carte retournée par le joueur. Comme vous le verrez
+On entend par fight, l'opér d'examiner la valeur de la carte retournée par le joueur. Comme vous le verrez
 ci-dessous, une carte est aussi vue dans le jeu comme une pièce (espace, en anglais «room») dans le dongeon.
 Les valeurs possibles sont :
 * *WIN*
@@ -329,16 +332,24 @@ Elle indique ensuite que la partie est en cours.
 Avec la direction en paramètre, une nouvelle position est définie depuis la précédente. La carte du dongeon est mise à visible. Selon la valeur de type de la pièce correspondante,
 les variables *findKey* et *findPrincess* sont mises à vrai et exécute méthode *checkIfIWin()*. Si un blork est identifié, il faut comparer les armes. Si elles ne sont pas les mêmes, on passe au joueur suivant avec *nextPlayer()*.
 
-Dans cette version 1, on ne traite pas le cas où l'on rencontre une porte (GATE), ni le cas où l'on rencontrerait un blork invicible.
+Dans cette version 1, on ne traite pas le cas où l'on rencontre une porte (GATE), ni le cas où l'on rencontrerait un blork invicible. Ces 2 cas seront laissés pour la version 2.
 
 * une méthode *void checkIfIWin()* qui teste si la clé et la princesse ont été trouvés, et si c'est le cas, définit l'identité du gagnant à celle du joueur courant.
 
 * une méthode *void nextPlayer()*. Celle-ci incrémente l'identité du joueur (en revenant au premier si l'on dépasse le nombre de joueurs), remet la variable *findKey*, *findPrincess*, *turnInProgress* à faux, redéfinit la position à la position initiale du nouveau courant joueur et remet toutes les cartes à l'état caché.
 
+##Classe GameView
+Cette classe fait partie du package «view». Elle est destinée à l'interface utilisateur qui sera dans notre cas en mode **console**. Ceci signifie que pour faire une interface graphique, il ne faudrait modifier que les classes de ce package. C'est cette classe qui contient ma méthode *main*.
 
+Cette classe instancie le jeu. Tant que le jeu n'est pas fini, c'est-à-dire qu'un joueur n'a pas trouvé la princesse de sa couleur et une clé, il faut demander au joueur de choisir et introduire un mouvement et une arme. Et bien sûr afficher le tableau de jeu et des questions 
 
+C'est sans doute une bonne idée d'ajouter une classe *Display* qui gère les présentations à l'utilisateur. Celle-ci typiquement possède des méthodes pour présenter une pièce, le donjon 
+et du texte. Elle utilisera par exemple la classe java.io.Console et ses méthodes.
 
+#GameOver, version 2
+Dans cette seconde version de l'application, vous rajouterez les cas qui décrivent ce qui a lieu lorsqu'une carte GATE ou blork invincible est identifiée.
 
+XXX À compléter XXX
 
 
 
