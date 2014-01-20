@@ -22,19 +22,18 @@ package pbt.gameover.model;
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
-public class Player {    
+public class Player {
     /*
      * Création automatique de la couleur du player et
      * de sa position.
      */
-    private static final BarbarianColor[] COLORS =
-        {BarbarianColor.RED, BarbarianColor.GREEN, BarbarianColor.BLUE, BarbarianColor.YELLOW};
     private static final DungeonPosition[] POSITIONS =
         {DungeonPosition.P_BARBARIAN_1,
             DungeonPosition.P_BARBARIAN_2,
             DungeonPosition.P_BARBARIAN_3,
             DungeonPosition.P_BARBARIAN_4 };
-    private static int n = 0;
+    private int n = 0;                // numéro du joueur
+    private static int nbJoueurs = 0; // nombre de joueurs
 
     /* Je devrais les écrire en majuscule */
     private final BarbarianColor color;
@@ -42,11 +41,11 @@ public class Player {
     private String name;
 
     public Player() throws GameOverException {
-        if (n > 4) throw new GameOverException("Trop de joueurs");
+        if (nbJoueurs > 4) throw new GameOverException("Trop de joueurs");
         name = "Anonym";
-        color = COLORS[n];
+        color = BarbarianColor.values()[n];
         initPosition = POSITIONS[n];
-        n++;
+        n=++nbJoueurs;
     }
 
     public BarbarianColor getColor() {
@@ -65,7 +64,7 @@ public class Player {
         this.name = name;
     }
 
-    
+
 
 
 
