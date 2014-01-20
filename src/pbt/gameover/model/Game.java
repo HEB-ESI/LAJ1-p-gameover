@@ -33,9 +33,10 @@ public class Game {
     private List<Player> players;
     /* L'identifiant du jouer courant (0 basé) */
     private int idCurrent;
-    /* La dernière postition du joueur courant.
+    /* La dernière position du joueur courant.
      * Si c'est son premier mouvement dans ce tour,
-     * sa position est sa position de départ.
+     * sa position est sa position de départ
+     * (cette position de départ est « hors donjon »)
      */
     private DungeonPosition lastPosition;
     /*
@@ -44,7 +45,8 @@ public class Game {
     private boolean findKey;
     private boolean findPrincess;
     /*
-     * Je dois mémoriser si la partie est en cours
+     * Je dois mémoriser si la partie est en cours (si c'est un barbare dans
+     * le donjon ou bien s'il vient de mourir et qu'il faut passer au suivant)
     */
     private boolean turnInProgress;
     /* La partie est finie dès qu'une princesse est trouvée, idWinner
@@ -62,10 +64,23 @@ public class Game {
         DungeonPosition.P_BARBARIAN_4
     };
 
+    /**
+     * Un constructeur sans paramètre pour créer une partie sans choix de
+     * prénoms.
+     *
+     * Les prénoms sont imposés; Juste, Pierre, Marlène et François
+     * @throws GameOverException
+     */
     public Game() throws GameOverException{
         this("Juste", "Pierre", "Marlène", "François");
     }
 
+    /**
+     * Constructeur d'une partie de « Game Over ».
+     *
+     * @param names les prénoms des joueurs
+     * @throws GameOverException
+     */
     public Game(String... names) throws GameOverException {
         if (names.length < 2 || names.length > 4) {
             throw new GameOverException("Il faut 2,3 ou 4 joueurs");
@@ -85,22 +100,34 @@ public class Game {
         idWinner = -1;          // Pas de gagnant
     }
 
+    /**
+     * Getter du donjon
+     * @return le donjon
+     */
     public Dungeon getDungeon() {
         //@todo v2 Dungeon devrait être clonebale et je devrais renvoyer une
         // copie. aucune raison que la vue ne modifie mon donjon ! 
         return dungeon;
     }
 
+    /**
+     * Getter le joueur courant.
+     * @return le joueur courant
+     */
     public Player getCurrentPlayer(){
         // Je sais que idCurrent est tjs valide.
         return players.get(idCurrent);
     }
 
+    /**
+     * Précise si un barbare est dans la place ou s'il faut passer au joueur
+     * suivant.
+     *
+     * @return vrai si un barbare est dans le donjon
+     */
     public boolean isTurnInProgress() {
         return turnInProgress;
     }
-
-
 
     /**
      * Précise si la partie est finie.
@@ -131,9 +158,11 @@ public class Game {
      * qui retourne une tuile supplémentaire.
      * @param d la direction prise par le barbare.
      * @param wt l'arme choisie
+     * @return true si le barbare n'est pas mort, false sinon !
      * @throws pbt.gameover.model.GameOverException
      */
-    public void play(Direction d, WeaponType wt)throws GameOverException{
+    public boolean play(Direction d, WeaponType wt)throws GameOverException{
+        boolean isWin = true;
         if (idWinner != -1) {
             throw new GameOverException("La partie est finie");
         }
@@ -163,10 +192,12 @@ public class Game {
                 // ce sera pour la v2
                 // @todo v2
                 if (blorkWeakness != wt) {                    
-                    nextPlayer();
+                    //nextPlayer();
+                    isWin = false;
                 }
             default:
-        }        
+        }
+        return isWin;
     }
 
     private void checkIfIWin() {
@@ -175,7 +206,10 @@ public class Game {
         }
     }
 
-    private void nextPlayer(){        
+    /**
+     * Permet de passer au joueur suivant dès que c'est « Game Over ».
+     */
+    public void nextPlayer(){
         idCurrent = ++idCurrent % players.size();
         findKey = false;
         findPrincess = false;

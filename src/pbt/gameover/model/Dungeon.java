@@ -40,7 +40,7 @@ public class Dungeon {
     /*
      * Je parle en terme de ligne, colonne (pas abscisse, ordonée)
      * Je considère que le côté en haut à gauche est 0,0
-     * Je ne donne pas de getter vers le tableau. Ce serait une
+     * Je ne donne pas de getter vers le tableau. 
      */
     private Room[][] roomss;
     private static Dungeon instance = null;
@@ -86,7 +86,6 @@ public class Dungeon {
         Collections.shuffle(alCards);
         for (int i = 0; i < roomss.length; i++) {
             for (int j = 0; j < roomss[i].length; j++) {
-                //squaress[i][j] = alCards.remove(alCards.size()-1);
                 roomss[i][j] = alCards.get(i * roomss.length + j);
             }
         }
@@ -127,9 +126,5 @@ public class Dungeon {
             }
         }
     }
-
-
-
-
 
 }

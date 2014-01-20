@@ -24,7 +24,10 @@ import javax.swing.text.Position;
  *
  * En tant que telle, elle doit être sur de plateau et pas à côté.
  * Je vérifie ça et je compte la-dessus partout dans mon code: si une
- * position est instanciée, c'est qu'elle est valide. 
+ * position est instanciée, c'est qu'elle est valide.
+ *
+ * Je ferai une exception en créant 4 positions hors donjon représentant les
+ * portes d'entrée des petits barbares.
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
@@ -33,7 +36,9 @@ public class DungeonPosition {
     private int column;
     private int row;
 
-    // @todo Guestion pourquoi pas un tableau ?
+    // On m'a demandé
+    // – Pourquoi pas un tableau ?
+    // Je n'en sais fichtre rien …
     public static final DungeonPosition P_BARBARIAN_1 =
             new DungeonPosition();
     public static final DungeonPosition P_BARBARIAN_2 =
@@ -95,22 +100,50 @@ public class DungeonPosition {
         return row;
     }
 
+    /**
+     * Mouvement vers le haut
+     * @return la nouvelle position
+     * @throws GameOverException
+     */
     public DungeonPosition up() throws GameOverException{
         return new DungeonPosition(row-1, column);
     }
 
+    /**
+     * Mouvement vers la droite
+     * @return la nouvelle position
+     * @throws GameOverException
+     */
     public DungeonPosition right() throws GameOverException{
         return new DungeonPosition(row, column+1);
     }
 
+    /**
+     * Mouvement vers le bas
+     * @return la nouvelle position
+     * @throws GameOverException
+     */
     public DungeonPosition down() throws GameOverException{
         return new DungeonPosition(row+1, column);
     }
 
+    /**
+     * Mouvement vers la gauche
+     * @return la nouvelle position
+     * @throws GameOverException
+     */
     public DungeonPosition left() throws GameOverException{
         return new DungeonPosition(row, column-1);
     }
 
+    /**
+     * Mouvement dans une direction …
+     * si c'est possible en restant dans le donjon
+     *
+     * @param d la direction dans laquelle aller
+     * @return un nouvelle position
+     * @throws GameOverException lancée si je sors du donjon
+     */
     public DungeonPosition move(Direction d) throws GameOverException{
         DungeonPosition dp;
         switch (d) {
@@ -132,16 +165,18 @@ public class DungeonPosition {
         return dp;
     }
 /*
+    @todo a effacer
     public boolean isAdjoining(DungeonPosition p){
         return (row == p.row && Math.abs(column-p.column) == 1)
                 || (column == p.column && Math.abs(row-p.row) == 1);
     }
 */
-    public boolean isInDungeon() {
-        // copy/paste
-        return !(column < 0 || column >= Dungeon.N
-                || row < 0 || row >= Dungeon.N);
-    }
+    // @todo à effacer
+//    public boolean isInDungeon() {
+//        // copy/paste
+//        return !(column < 0 || column >= Dungeon.N
+//                || row < 0 || row >= Dungeon.N);
+//    }
 
     @Override
     public String toString() {

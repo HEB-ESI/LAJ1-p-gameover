@@ -17,7 +17,6 @@
 
 package pbt.gameover.view;
 
-import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 import pbt.gameover.model.Direction;
@@ -63,10 +62,6 @@ public class GameView {
 
         // On joue
         while (!game.isOver()) {
-            if (!game.isTurnInProgress()) {
-                display("Appuie sur une ENTER …\n");
-                readLine();
-            }
             clear();
             display(game.getCurrentPlayer());
             display(game.getDungeon());            
@@ -90,11 +85,19 @@ public class GameView {
                 Direction d = CHAR_DIRECTIONS.get(move);
                 WeaponType wt = WEAPONS[weapon];
                 display("On tente la direction " + d + " avec " + wt + "\n");
-                game.play(d,wt);
+                if (!game.play(d,wt)){
+                    // Game Over
+                    display(CouleurTerminal.RED + "GAME OVER\n\n"
+                            + CouleurTerminal.DEFAULT);
+                    display(game.getDungeon());
+                    game.nextPlayer();
+                    display("Appuie sur une ENTER …\n");
+                    readLine();
+                }                
             } catch (GameOverException ex) {
                 display("Erreur (" + ex.getMessage() + ")\n");
                 continue;
-                // Je m'autorise un break pour réitérer
+                // Je m'autorise un continue pour réitérer
             }
         }
         Player winner = game.getWinner();
