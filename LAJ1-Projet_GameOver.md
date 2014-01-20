@@ -219,10 +219,13 @@ est une constante publique de la classe Dungeon qui vaut 5.
 
 La classe définit aussi quatre variables constantes publiques, les positions initiales des joueurs sont définies.
 Ce sont P_BARBARIAN_1 à P_BARBARIAN_4. Celles-ci sont créés aux positions hors de la grille comme précisées
-dans les règles, en tournant dans le sens des aiguilles d'une montre pour les 4 barbares.
+dans les règles. Nous suggérons que ces positions initiales soient choisies de telle sorte que si 2 joueurs
+seulement participent, ils partent de positions opposées. Les positions initiales seraient par exemple
+respectivement, pour 1 le nord-ouest, pour 2 le sud-est, pour 3 le nord-est et pour 4 le sud-ouest.
 
 ###Méthodes
-Cette classe contient un constructeur à 2 paramètres (ligne, colonne). Les valeurs des paramètres sont vérifiées par le constructeur,
+Cette classe contient un constructeur à 2 paramètres (ligne, colonne). Les valeurs des paramètres
+sont vérifiées par le constructeur,
 et une *GameOverException* est lancée si un des paramètres n'est pas dans les bornes autorisées. Sont aussi présents,
 les accesseurs *int getRow* et *int getColumn*.
 
@@ -240,48 +243,75 @@ Elle réécrit également la méthode toString().
 ##Classe Player
 Cette classe représente un joueur (player). Un joueur a comme attribut
 * *name* : *String*, un nom
-* *n* : *int*, un numéro unique (entier positif de 0 à 3). Cette variable de classe sera incrémentée à la création d'un joueur.
+* *n* : *int*, un numéro unique (entier positif de 0 à 3).
+* *nbJoueurs* : *int*, le nombre de joueurs. Cette variable de classe sera incrémentée
+à la création d'un joueur.
 * *color* : *BarbarianColor*, la couleur du personnage,
-* *firsPosition* : *Position*, la position initiale de la première pièce où il passe. Cet attribut ne pourra qu'être lu.
+* *firsPosition* : *Position*, la position initiale de la première pièce où il passe.
+Cet attribut ne pourra qu'être lu.
 
-Pour la facilité d'accès, on crée aussi des tableaux de classe privés et constants qui contiennent respectivement les 4 positions initiales et les 4 couleurs de barbares. Ce sont
+Pour la facilité d'accès, on crée aussi un tableau de classe privés et constants qui
+contient les 4 positions initiales. C'est
 * *POSITIONS* : *DungeonPositions[]*
-* *COLORS* : *BarbarianColors[]*
+
+Un tableau des couleurs de barbares est utilisable également, créé par le compilateur.
 
 ###Méthodes
-Cette classe aura un constructeur à 1 paramètres : le nom. La position initiale, et la couleur sont définies au départ des tableaux *COLORS* et *POSITIONS*. Le constructeur lance une exception si on essaye de construire plus de 4 joueurs.
+Cette classe aura un constructeur à 1 paramètres : le nom. La position initiale, et la
+couleur sont définies au départ des tableaux *COLORS* et *POSITIONS*. Le
+constructeur lance une exception si on essaye de construire plus de 4 joueurs.
 
-La méthode possède aussi les accesseurs *BarbarianColor getColot*, *String getName*, *Position getFirstPosition*. Elle réécrit également la méthode toString().
+La méthode possède aussi les accesseurs *BarbarianColor getColot*, *String getName*,
+*Position getFirstPosition*. Elle réécrit également la méthode toString().
 
 ##Classe Room
-Cette classe représente un élément du donjon, le plateau de jeu. Nous le voyons comme un des places où
+Cette classe représente un élément du donjon, le plateau de jeu. Ceci représente donc
+aussi une carte déposée sur le plateau de jeu. Nous le voyons comme un des places où
 le joueur peut se trouver, d'où le nom. Elle a comme attribut :
-* *type* : *RoomType*, le type de figures que l'élément du dongeon peut éventuellement porter. Il sera *null* si
-
+* *type* : *RoomType*, le type de figures que l'élément du dongeon peut éventuellement porter.
 * *weapon* : *WeaponType*, le type d'armes  que l'élément du dongeon peut éventuellement porter,
 * *color* : *BarbarianColor*, qui représente la couleur de la carte,
-* *hidden* : *booléen*, un paramètre qui indique si la carte est cachée (vrai) ou si elle  a été retournée et est donc visible (faux). Ce paramètre est donc vrai au début de la partie.
+* *hidden* : *booléen*, un paramètre qui indique si la carte est cachée (vrai) ou si elle
+a été retournée et est donc visible (faux). Ce paramètre est donc vrai au début de la partie.
+
+Lors de l'usage des objets instanciés de cette classe, certains attributs seront à *null*
+si ils ne sont pas pertinents. Par exemple, si la carte est une clé, elle n'a pas de couleur
+et pas d'arme. Si c'est un blork, il n'a pas de couleur.
 
 ###Méthodes
-Cette classe contient un constructeur à 4 paramètres *Room()* et définit les 4 attributs, les accesseurs *RoomType getType()*,
-*WeaponType  getWeapon()*, *boolean isHidden()* et *BarbarianColor getColor(), et le mutateur de *void setHidden(booléen)*.
+Cette classe contient un constructeur à 4 paramètres *Room()* et définit les 4 attributs,
+les accesseurs *RoomType getType()*,
+*WeaponType  getWeapon()*, *boolean isHidden()* et *BarbarianColor getColor(), et
+le mutateur de *void setHidden(booléen)*.
 
 ##Classe Dungeon
 Cette classe représente le donjon, c'est-à-dire le plateau de jeu. Elle a comme attributs :
 * *N=5*, une constante publique qui indique la taille d'un côté du plateau de jeu.
 * *roomss : Room[][]*, un tableau à 2 dimensions qui contiendra la carte mélangées.
 
-Pour être sûr de ne créer qu'une seule instance de donjon, on introduit un autre attribut de classe
-* *instance : Dungeon* initialement mis à null lors de l'initialisation, et une méthode associée *Dungeon getInstance()*.
+Pour être sûr de ne créer qu'une seule instance de donjon, on introduit un autre attribut
+de classe
+* *instance : Dungeon* initialement mis à null lors de l'initialisation, et une méthode
+associée *Dungeon getInstance()*.
 
 ###Méthodes
 La classe possède une constructeur **privée* sans paramètre *Dungeon()*.
-Le fait que le constructeur soit privé fait qu'il ne peut pas être utilisé par un autre objet. On introduit la méthode *Dungeon getInstance()* qui est la seule par laquelle il
-est possible de créer l'objet, et uniquement si l'attribut *instance* était préalablement à null. Ceci est une mise en œuvre du pattern de programmation «singleton».
+Le fait que le constructeur soit privé fait qu'il ne peut pas être utilisé par un
+autre objet. On introduit la méthode *Dungeon getInstance()* qui est la seule
+par laquelle il
+est possible de créer l'objet, et uniquement si l'attribut *instance* était
+préalablement à null. Ceci est une mise en œuvre du pattern de programmation «singleton».
 
 Ce constructeur crée explicitement
-les 25 pièces. Elles sont toutes initialement cachées. Celles-ci sont : 16 cartes de type BLORK séparées en 4 fois 4 avec chaque arme, sans couleur. Une de type GATE, sans couleur. Deux de type KEY, sans couleur.  Quatre de type PRINCESS, chacune d'une couleur. Et deux de type BLORK sans arme ni couleur qui seront les blorks invincibles. Une des manières de remplir le tableau *roomss* est de créer un tableau de cartes transformé ensuite en une liste avec la méthode adéquate de la classe Arrays. De mélanger cette liste, puis dans
-des boucles qui parcourent les éléments du tableau, d'enlever au fur et à mesure les éléments de cette liste et les mettre dans le tableau.
+les 25 pièces. Elles sont toutes initialement cachées. Celles-ci sont : 16 cartes de
+type BLORK séparées en 4 fois 4 avec chaque arme, sans couleur. Une de type GATE,
+sans couleur. Deux de type KEY, sans couleur.  Quatre de type PRINCESS, chacune
+d'une couleur. Et deux de type BLORK sans arme ni couleur qui seront les blorks
+invincibles. Une des manières de remplir le tableau *roomss* est de créer un
+tableau de cartes transformé ensuite en une liste avec la méthode adéquate
+de la classe Arrays. De mélanger cette liste, puis dans
+des boucles qui parcourent les éléments du tableau, d'enlever au fur et à
+mesure les éléments de cette liste et les mettre dans le tableau.
 
 Il y a encore les méthodes
 * *Room getRoom(DungeonPosition)*  qui renvoit le type de pièce à la position en paramètre,
@@ -291,15 +321,18 @@ pour qu'elle devienne visible. La valeur devient donc *faux*.
 *hidden* pour qu'elles soient à nouveau cachées.
 
 ##Classe Game
-C'est la classe qui contient le plus d'«intelligence». Elle sera la principale avec laquelle échangeront les classes de présentation de la partie *view*.
+C'est la classe qui contient le plus d'«intelligence». Elle sera la principale avec
+laquelle échangeront les classes de présentation de la partie *view*.
 
 Cette classe contient les attributs :
 * *dungeon : Dungeon*, le donjon
 * *players : List<Player>*, la liste des joueurs
 * *idCurrent : int*, le numéro du joueur courant,
-* *lastPosition : DungeonPosition*, la dernière position du joueur courant. Si c'est son premier mouvement du tour, sa position est sa position de départ.
+* *lastPosition : DungeonPosition*, la dernière position du joueur courant. Si
+c'est son premier mouvement du tour, sa position est sa position de départ.
 * *findKey : booléen*, et
-* *findPrincess : booléen*, 2 valeurs qui sont mises à vrai lorsque une clé et la princesse de la bonne couleur sont trouvées, ce qui est nécessaire pour gagner.
+* *findPrincess : booléen*, 2 valeurs qui sont mises à vrai lorsque une clé et
+la princesse de la bonne couleur sont trouvées, ce qui est nécessaire pour gagner.
 * *idWinner : int*, le numéro du joueur gagnant. Ce numéro est initialement mis à -1
 par le constructeur, indiquant qu'il n'y a pas encore de vainqueur. Il est mis à l'id du
 gagnant lorsque celui-ci est défini.
@@ -309,43 +342,68 @@ la partie est en cours. Elle est mise à *false* par le constructeur.
 ###Méthodes
 Cette classe a les méthodes suivantes :
 
-* un constructeur *Game(String[] names)* où *names* sont les noms des joueurs. Le constructeur vérifie qu'il y a 2, 3 ou 4 joueurs et envoit une GameOverException si
-ce n'est pas le cas. Le constructeur va créer les joueurs et les ajouters à la liste *players*. Il crée un donjon unique par appel à la méthode getInstance de Dungeon.
-Le joueur courant est le premier, la dernière position est la première du premier barbare, les variables *findKey* et *findPrincess* sont mises à faux.
+* un constructeur *Game(String[] names)* où *names* sont les noms des joueurs.
+Le constructeur vérifie qu'il y a 2, 3 ou 4 joueurs et envoit une GameOverException si
+ce n'est pas le cas. Le constructeur va créer les joueurs et les ajouters à
+la liste *players*. Il crée un donjon unique par appel à la méthode getInstance de Dungeon.
+Le joueur courant est le premier, la dernière position est la première du
+premier barbare, les variables *findKey* et *findPrincess* sont mises à faux.
 
 * des getters :
  * *public Dungeon getDungeon()*,
  * *public Player getCurrentPlayer()*, qui renvoit le joueur courant
  * *boolean isTurnInProgress()*
 
-* une méthode *boolean isOver()* qui permet de savoir si la partie est finie. C'est la valeur de idWinner qui indique cela.
+* une méthode *boolean isOver()* qui permet de savoir si la partie est finie.
+C'est la valeur de idWinner qui indique cela.
 
-* une méthode *Player getWinner()* qui renvoit null si aucun joueur n'est encore gagnant et
+* une méthode *Player getWinner()* qui renvoit null si aucun joueur n'est
+encore gagnant et
 si la partie n'est pas finie, renvoit le joueur dont l'idWinner est donné.
 
 * une méthode *void play(Direction, WeaponType)*
-Cette méthode décrit un coup. Elle commence par tester que la partie n'est pas finie et lance une exception si elle est finie.
+Cette méthode décrit un coup. Elle commence par tester que la partie n'est pas
+finie et lance une exception si elle est finie.
 Elle indique ensuite que la partie est en cours.
 
-Avec la direction en paramètre, une nouvelle position est définie depuis la précédente. La carte du dongeon est mise à visible. Selon la valeur de type de la pièce correspondante,
-les variables *findKey* et *findPrincess* sont mises à vrai et exécute méthode *checkIfIWin()*. Si un blork est identifié, il faut comparer les armes. Si elles ne sont pas les mêmes, on passe au joueur suivant avec *nextPlayer()*.
+Avec la direction en paramètre, une nouvelle position est définie depuis la
+précédente. La carte du dongeon est mise à visible. Selon la valeur de
+type de la pièce correspondante,
+les variables *findKey* et *findPrincess* sont mises à vrai et exécute
+méthode *checkIfIWin()*. Si un blork est identifié, il faut comparer les
+armes. Si elles ne sont pas les mêmes, on passe au joueur suivant avec *nextPlayer()*.
 
-Dans cette version 1, on ne traite pas le cas où l'on rencontre une porte (GATE), ni le cas où l'on rencontrerait un blork invicible. Ces 2 cas seront laissés pour la version 2.
+Dans cette version 1, on ne traite pas le cas où l'on rencontre une porte (GATE),
+ni le cas où l'on rencontrerait un blork invicible. Ces 2 cas seront laissés pour la version 2.
 
-* une méthode *void checkIfIWin()* qui teste si la clé et la princesse ont été trouvés, et si c'est le cas, définit l'identité du gagnant à celle du joueur courant.
+* une méthode *void checkIfIWin()* qui teste si la clé et la princesse
+ont été trouvés, et si c'est le cas, définit l'identité du gagnant à celle du joueur courant.
 
-* une méthode *void nextPlayer()*. Celle-ci incrémente l'identité du joueur (en revenant au premier si l'on dépasse le nombre de joueurs), remet la variable *findKey*, *findPrincess*, *turnInProgress* à faux, redéfinit la position à la position initiale du nouveau courant joueur et remet toutes les cartes à l'état caché.
+* une méthode *void nextPlayer()*. Celle-ci incrémente l'identité du
+joueur (en revenant au premier si l'on dépasse le nombre de joueurs),
+remet la variable *findKey*, *findPrincess*, *turnInProgress* à faux,
+redéfinit la position à la position initiale du nouveau courant joueur et
+remet toutes les cartes à l'état caché.
 
 ##Classe GameView
-Cette classe fait partie du package «view». Elle est destinée à l'interface utilisateur qui sera dans notre cas en mode **console**. Ceci signifie que pour faire une interface graphique, il ne faudrait modifier que les classes de ce package. C'est cette classe qui contient ma méthode *main*.
+Cette classe fait partie du package «view». Elle est destinée à l'interface
+utilisateur qui sera dans notre cas en mode **console**. Ceci signifie que
+pour faire une interface graphique, il ne faudrait modifier que les classes
+de ce package. C'est cette classe qui contient ma méthode *main*.
 
-Cette classe instancie le jeu. Tant que le jeu n'est pas fini, c'est-à-dire qu'un joueur n'a pas trouvé la princesse de sa couleur et une clé, il faut demander au joueur de choisir et introduire un mouvement et une arme. Et bien sûr afficher le tableau de jeu et des questions
+Cette classe instancie le jeu. Tant que le jeu n'est pas fini, c'est-à-dire
+qu'un joueur n'a pas trouvé la princesse de sa couleur et une clé, il faut
+demander au joueur de choisir et introduire un mouvement et une arme. Et
+bien sûr afficher le tableau de jeu et des questions
 
-C'est sans doute une bonne idée d'ajouter une classe *Display* qui gère les présentations à l'utilisateur. Celle-ci typiquement possède des méthodes pour présenter une pièce, le donjon
+C'est sans doute une bonne idée d'ajouter une classe *Display* qui gère
+les présentations à l'utilisateur. Celle-ci typiquement possède des
+méthodes pour présenter une pièce, le donjon
 et du texte. Elle utilisera par exemple la classe java.io.Console et ses méthodes.
 
 #GameOver, version 2
-Dans cette seconde version de l'application, vous rajouterez les cas qui décrivent ce qui a lieu lorsqu'une carte GATE ou blork invincible est identifiée.
+Dans cette seconde version de l'application, vous rajouterez les cas qui décrivent
+ce qui a lieu lorsqu'une carte GATE ou blork invincible est identifiée.
 
 XXX À compléter XXX
 
