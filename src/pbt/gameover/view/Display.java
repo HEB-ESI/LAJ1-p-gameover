@@ -17,15 +17,12 @@
 package pbt.gameover.view;
 
 import java.io.Console;
-import pbt.gameover.model.BarbarianColor;
 import pbt.gameover.model.Dungeon;
 import pbt.gameover.model.DungeonPosition;
 import pbt.gameover.model.Game;
 import pbt.gameover.model.GameOverException;
 import pbt.gameover.model.Player;
 import pbt.gameover.model.Room;
-import pbt.gameover.model.RoomType;
-import pbt.gameover.model.WeaponType;
 
 import static pbt.gameover.view.CouleurTerminal.*;
 
@@ -35,9 +32,11 @@ import static pbt.gameover.view.CouleurTerminal.*;
  *
  * Remarque sur les caractères spéciaux 𝄞 = U+1D11E	pas représentable en char
  *
- * 2/ Soustraire 0x10000 → 0xD11E 1/ convertir en binaire 1101000100011110 2/ 10
- * bits faibles 0100011110 = 11E 3/ 10 bits forts 0000110100 = 34 4/ Ajouter aux
- * faibles DC00 → DC00 + 11E = DD1E 5/ Ajouter aux forts D800 → D800 + 34 = D834
+ * 1/ convertir en binaire 1101000100011110
+ * 2/ 10 bits faibles 0100011110 = 11E
+ * 3/ 10 bits forts 0000110100 = 34
+ * 4/ Ajouter aux faibles DC00 → DC00 + 11E = DD1E
+ * 5/ Ajouter aux forts D800 → D800 + 34 = D834
  *
  * Remarque au sujet de la méthode readLine Dans une classe dédiée à
  * l'affichage, c'est dommage d'ajouter une méthode qui fait une lecture … mais
@@ -90,8 +89,7 @@ public class Display {
      */
     public static void display(Dungeon d) {
         Room room;
-        try {
-            // Ne pas oublier d'ajouter les entrées dans le donjon DONE
+        try {            
             CONSOLE.printf(RED + "  " + ENTRY_UP_DOWN + DEFAULT + "\n");
             for (int i = 0; i < Dungeon.N; i++) {
                 if (i == Dungeon.N - 1) {
@@ -128,6 +126,11 @@ public class Display {
         }
     }
 
+    /**
+     * Affiche un joueur.
+     *
+     * @param p le joueur
+     */
     public static void display(Player p) {
         String s = "";
         switch (p.getColor()) {
@@ -148,10 +151,23 @@ public class Display {
         CONSOLE.printf(s);
     }
 
+    /**
+     * Affiche une chaine de caractère.
+     *
+     * @param s la chaine à afficher
+     */
     public static void display(String s) {
         CONSOLE.printf(s);
     }
 
+    /**
+     * Affiche une pièce du donjon.
+     *
+     * N'affiche pas la décoration du la pièce, simplement son état par le
+     * biais de 2 caractères.
+     *
+     * @param r la pièce du donjon à afficher
+     */
     public static void display(Room r) {
         String s = " ";        
         if (r.isHidden()) {
@@ -219,6 +235,11 @@ public class Display {
         CONSOLE.printf(s);
     }
 
+    /**
+     * Affiche le gagnant s'il existe et « Pas de gagnant » sinon.
+     *
+     * @param winner le gagnant éventuel.
+     */
     public static void displayWinner(Player winner) {
         if (winner == null) {
             CONSOLE.printf("Pas de gagnant");
@@ -227,20 +248,12 @@ public class Display {
         }
     }
 
+    /**
+     * Est sensé effacer (un peu) l'écran … mais c'est bancal comme
+     * implémentation.
+     */
     public static void clear() {
         CONSOLE.printf(CLEAR);
-    }
-
-    public static void main(String[] args) {        
-        try {
-            Game g = new Game();
-            display(g.getCurrentPlayer());
-            display(g.getDungeon());
-        } catch (GameOverException e) {
-            System.err.printf("Error + (%s)", e.getMessage());
-            System.exit(1);
-        }
-
     }
 
 }

@@ -18,6 +18,9 @@
 package pbt.gameover.model;
 
 /**
+ * Le type de pièce du donjon.
+ *
+ * Chaque pièce du donjon a un type.
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */

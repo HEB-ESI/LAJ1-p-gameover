@@ -36,15 +36,20 @@ public class Dungeon {
 
     /**
      * Les cartes 5x5 représentant le donjon.
-     */
-    /*
-     * Je parle en terme de ligne, colonne (pas abscisse, ordonée)
+     *
+     * Je parle en terme de ligne, colonne (pas abscisse, ordonnée)
      * Je considère que le côté en haut à gauche est 0,0
-     * Je ne donne pas de getter vers le tableau. 
+     * Je ne donne pas de getter vers le tableau.
+     *
      */
     private Room[][] roomss;
     private static Dungeon instance = null;
 
+    /**
+     * Retourne l'instance unique du donjon.
+     * (singleton pattern)
+     * @return le donjon
+     */
     public static Dungeon getInstance(){
         if (instance == null){
             instance = new Dungeon();
@@ -90,9 +95,6 @@ public class Dungeon {
             }
         }
     }
-
-
-
 
     /**
      * Retourne une carte du donjon.

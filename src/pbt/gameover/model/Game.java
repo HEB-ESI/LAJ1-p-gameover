@@ -162,6 +162,8 @@ public class Game {
      * @throws pbt.gameover.model.GameOverException
      */
     public boolean play(Direction d, WeaponType wt)throws GameOverException{
+        //@todo vérifier que c'est le bon joueur qui joue (pour l'instant, on
+        // compte sur la vue)
         boolean isWin = true;
         if (idWinner != -1) {
             throw new GameOverException("La partie est finie");
@@ -217,10 +219,5 @@ public class Game {
         turnInProgress = false;
         dungeon.hideAll();
     }
-
-
-
-
-
 
 }

@@ -17,8 +17,6 @@
 
 package pbt.gameover.model;
 
-import javax.swing.text.Position;
-
 /**
  * Représente une position *dans* le donjon.
  *
@@ -164,19 +162,6 @@ public class DungeonPosition {
         }
         return dp;
     }
-/*
-    @todo a effacer
-    public boolean isAdjoining(DungeonPosition p){
-        return (row == p.row && Math.abs(column-p.column) == 1)
-                || (column == p.column && Math.abs(row-p.row) == 1);
-    }
-*/
-    // @todo à effacer
-//    public boolean isInDungeon() {
-//        // copy/paste
-//        return !(column < 0 || column >= Dungeon.N
-//                || row < 0 || row >= Dungeon.N);
-//    }
 
     @Override
     public String toString() {

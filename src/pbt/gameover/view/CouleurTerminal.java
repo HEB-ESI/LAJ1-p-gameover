@@ -4,7 +4,7 @@ package pbt.gameover.view ;
  * <p>CouleurTerminal met à disposition un ensemble de constantes permettant de
  * colorer les sorties "stdout". </p>
  *
- * <p>Ca s'utilise par exemple comme suit
+ * <p>Ça s'utilise par exemple comme suit
  * <code>System.out.println(CouleurTerminal.RED + "j'écris en rouge" +
  * CouleurTerminal.DEFAULT);</code>.
  */

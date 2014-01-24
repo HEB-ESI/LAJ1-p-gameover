@@ -54,24 +54,44 @@ public class Room {
         this.color = color;
     }
 
+    /**
+     * Getter
+     * @return roomType
+     */
     public final RoomType getType() {
         return type;
     }
 
 
+    /**
+     * Getter
+     * @return si la carte est cachée
+     */
     public final boolean isHidden() {
         return hidden;
     }
 
+    /**
+     * Setter
+     * @param hidden
+     */
     public final void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 
+    /**
+     * Getter
+     * @return weapontype
+     */
     public final WeaponType getWeapon() {
         return weapon;
     }
 
 
+    /**
+     * Getter
+     * @return la couleur du petit barbare
+     */
     public BarbarianColor getColor() {
         return color;
     }
