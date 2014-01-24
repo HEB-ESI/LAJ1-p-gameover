@@ -28,8 +28,8 @@ les dates butoires de remise. On entend par date butoire, un moment défini pas 
 le travail doit être remis au professeur, et au delà duquel le travail *ne* sera *plus* accepté. Rien ne vous empêche
 de remettre votre travail plus tôt que la date butoire, la veille, la semaine précédente ...
 
-|*Partie*     | Plan de tests | GameOver version 1 | GameOver version 2 | Défense orale |
-|*Semaine du* |     10 mars   |   24 mars          |  22 avril          |  28 avril     |
+|*Partie*     | Plan de tests | Version 1 | Version 2 | Défense orale |  
+|*Semaine du* |   24 février  |  24 mars  |  28 avril |    5   mai    |
 
 #Les phases du projet
 
