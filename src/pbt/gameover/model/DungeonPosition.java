@@ -17,6 +17,8 @@
 
 package pbt.gameover.model;
 
+import java.util.Objects;
+
 /**
  * Représente une position *dans* le donjon.
  *
@@ -167,6 +169,31 @@ public class DungeonPosition {
     public String toString() {
         return "DungeonPosition{" + "column=" + column + ", row=" + row + '}';
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DungeonPosition other = (DungeonPosition) obj;
+        if (this.column != other.column) {
+            return false;
+        }
+        if (this.row != other.row) {
+            return false;
+        }
+        return true;
+    }
+
+
 
 
 

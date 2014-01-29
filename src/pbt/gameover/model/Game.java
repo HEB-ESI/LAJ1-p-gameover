@@ -100,6 +100,19 @@ public class Game {
         idWinner = -1;          // Pas de gagnant
     }
 
+    static Game getTestInstance(){
+        Game instance = null;
+        try {
+            instance = new Game();
+            instance.dungeon = Dungeon.getInstance();
+            //@todo continuer l'écriture des tessts 
+        } catch (GameOverException e){
+
+        }
+        instance.dungeon = Dungeon.getInstance();
+        return instance;
+    }
+
     /**
      * Getter du donjon
      * @return le donjon
