@@ -23,21 +23,6 @@ Les règles du jeu:
      * Ajout de l'échange des pièces (*room*) lorsque l'on tombe sur un des deux blorks invincibles
 * v3 · La version de l'examen du septembre
 
-##Révisions
-
-*7 janvier 2014*
-Premier commit avec dépot d'un projet de diagramme de classes.
-
-*15 janvier 2014*
-Commit d'une première version du code non fonctionnelle.
-
-*16 janvier 2014*
-Commit d'une version éxécutable avec beaucoup de lacunes.
-L'interface est fonctionnelle mais hyper basique et ne permet pas de voir la pièce dans lequel on *s'est fait mourru* ! L'interface passe directement au joueur suivant (c'est un bug).
-*18 janvier 2014*
-Interface fonctionnelle. 
-Petite modification de la logique au niveax de la méthode `Game.play`
-
 ##Auteurs
 
 *Code* Pierre Bettens <pbettens@heb.be>  
