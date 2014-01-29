@@ -56,6 +56,19 @@ public class Dungeon {
         }
         return instance;
     }
+    
+    /**
+     * Constructeur permettant d'obtenir un donjon dans une configuration donnée 
+     * à destination des tests. 
+     * 
+     * (Dans la foulée, on illustre l'utilisation de la visibilité package pour
+     * l'implémentation des tests). 
+     * @param configuration
+     * @return 
+     */
+    Dungeon(Room[][] configuration){
+        roomss = configuration;
+    }
 
     private Dungeon() {
         roomss = new Room[N][N];

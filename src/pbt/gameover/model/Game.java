@@ -100,6 +100,15 @@ public class Game {
         idWinner = -1;          // Pas de gagnant
     }
 
+    void initInstanceForTesting(){
+        idCurrent = 0;
+        lastPosition = POSITIONS[idCurrent];
+        findKey = false;
+        findPrincess = false;
+        turnInProgress = false;
+        idWinner = -1;          // Pas de gagnant
+    }
+
     /**
      * Getter du donjon
      * @return le donjon
@@ -108,6 +117,14 @@ public class Game {
         //@todo v2 Dungeon devrait être clonebale et je devrais renvoyer une
         // copie. aucune raison que la vue ne modifie mon donjon ! 
         return dungeon;
+    }
+
+    /**
+     * Setter à visibilité « package » à destination des tests JUnit.
+     * @param aDungeon
+     */
+    void setDonjon(Dungeon aDungeon){
+        dungeon = aDungeon;
     }
 
     /**
@@ -185,7 +202,8 @@ public class Game {
                 checkIfIWin();
                 break;
             case PRINCESS:
-                findPrincess = true;
+                findPrincess = 
+                        players.get(idCurrent).getColor() == room.getColor();
                 checkIfIWin();
                 break;
             case BLORK:

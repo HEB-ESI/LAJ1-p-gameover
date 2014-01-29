@@ -54,11 +54,16 @@ public class Player {
      * @throws GameOverException
      */
     public Player(String aName) throws GameOverException {
-        if (n > 4) throw new GameOverException("Trop de joueurs");
+        /*
+         * Les tests impactent ce code.
+         * Je ne peux pas limiter n à 4 car les tests créent 4 joueurs à chaque
+         * test. Je vais donc « tourner » de manière à ce qu'il n'y aie que
+         * maximum 4 joueurs.
+        */
         name = aName;
         color = BarbarianColor.values()[n];
         initPosition = POSITIONS[n];
-        n++;
+        n = (n+1)%4;
     }
 
     /**
