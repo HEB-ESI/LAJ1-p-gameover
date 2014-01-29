@@ -108,4 +108,16 @@ public class DungeonPositionTest {
         fail("Test fail");
     }
 
+    @Test
+    public void testCorner() throws GameOverException{
+        System.out.println("corner");
+        assertTrue(POSITION_NE.isCorner());
+        assertTrue(POSITION_NO.isCorner());
+        assertTrue(POSITION_SE.isCorner());
+        assertTrue(POSITION_SO.isCorner());
+        assertFalse(new DungeonPosition(2, 3).isCorner());
+        assertFalse(new DungeonPosition(0, 3).isCorner());
+        assertFalse(new DungeonPosition(2, 4).isCorner());
+    }
+
 }

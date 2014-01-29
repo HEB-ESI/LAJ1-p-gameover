@@ -165,6 +165,17 @@ public class DungeonPosition {
         return dp;
     }
 
+    /**
+     * Test si une position est dans un coin du donjon.
+     * @return true si c'est dans un coin, false sinon
+     */
+    public boolean isCorner() {
+        return row == 0 && column == 0
+                || row == 0 && column == Dungeon.N - 1
+                || row == Dungeon.N - 1 && column == 0
+                || row == Dungeon.N - 1 && column == Dungeon.N - 1 ;
+    }
+
     @Override
     public String toString() {
         return "DungeonPosition{" + "column=" + column + ", row=" + row + '}';

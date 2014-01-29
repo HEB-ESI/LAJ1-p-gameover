@@ -14,40 +14,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pbt.gameover.model;
 
+import java.util.Objects;
 
 /**
  * Représente une des cartes du jeu formant le plateau de jeu.
  *
- * Remarque
- * Idéalement, je n'utiliserais pas des attributs qui ne sont pas destinés à
- * chaque instance de la classe (par exemple weapon type qui n'est pas utile
- * pour la princesse) et j'utiliserais l'héritage.
- * L'héritage sera vu en deuxième. 
+ * Remarque Idéalement, je n'utiliserais pas des attributs qui ne sont pas
+ * destinés à chaque instance de la classe (par exemple weapon type qui n'est
+ * pas utile pour la princesse) et j'utiliserais l'héritage. L'héritage sera vu
+ * en deuxième.
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
 public class Room {
 
     private RoomType type;      /* Le type représenté sur la carte */
+
     private boolean hidden;     /* La carte est-elle cachée ? */
+
     private WeaponType weapon;  /* Le type d'arme permettan de vaincre le blork
-                                   si c'est un blork (null sinon) */
+     si c'est un blork (null sinon) */
+
     private BarbarianColor color;        /* La couleur de la carte s'il y a lieu
-                                        (princesse) */
+     (princesse) */
+
 
     /**
      * Constructeur d'une pièce du jeu.
+     *
      * @param type qui se cache dans la pièce du donjon ?
      * @param hidden précise si la carte est face cachée ou pas
-     * @param weapon l'arme permettant de tuer le blork
-     * (si c'en est un, null sinon)
+     * @param weapon l'arme permettant de tuer le blork (si c'en est un, null
+     * sinon)
      * @param color la couleur si c'est une princesse, null sinon
      */
     Room(RoomType type, boolean hidden,
-            WeaponType weapon, BarbarianColor color) {        
+            WeaponType weapon, BarbarianColor color) {
         this.type = type;
         this.hidden = hidden;
         this.weapon = weapon;
@@ -56,15 +60,16 @@ public class Room {
 
     /**
      * Getter
+     *
      * @return roomType
      */
     public final RoomType getType() {
         return type;
     }
 
-
     /**
      * Getter
+     *
      * @return si la carte est cachée
      */
     public final boolean isHidden() {
@@ -73,6 +78,7 @@ public class Room {
 
     /**
      * Setter
+     *
      * @param hidden
      */
     public final void setHidden(boolean hidden) {
@@ -81,29 +87,40 @@ public class Room {
 
     /**
      * Getter
+     *
      * @return weapontype
      */
     public final WeaponType getWeapon() {
         return weapon;
     }
 
-
     /**
      * Getter
+     *
      * @return la couleur du petit barbare
      */
     public BarbarianColor getColor() {
         return color;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, hidden, weapon, color);
+    }
 
-
-    
-
-
-
-
-
-
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Room other = (Room) obj;
+        return Objects.equals(type, other.type)
+                && hidden == other.hidden
+                && Objects.equals(weapon, other.weapon)
+                && Objects.equals(color, other.color);
+    }
 
 }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pbt.gameover.model;
 
 import java.util.ArrayList;
@@ -33,6 +32,8 @@ public class Game {
     private List<Player> players;
     /* L'identifiant du jouer courant (0 basé) */
     private int idCurrent;
+    /* État du barbare courant. */
+    private BarbarianState stateCurrent;
     /* La dernière position du joueur courant.
      * Si c'est son premier mouvement dans ce tour,
      * sa position est sa position de départ
@@ -44,11 +45,6 @@ public class Game {
      */
     private boolean findKey;
     private boolean findPrincess;
-    /*
-     * Je dois mémoriser si la partie est en cours (si c'est un barbare dans
-     * le donjon ou bien s'il vient de mourir et qu'il faut passer au suivant)
-    */
-    private boolean turnInProgress;
     /* La partie est finie dès qu'une princesse est trouvée, idWinner
      * passe de -1 à l'id du gagnant
      */
@@ -56,7 +52,7 @@ public class Game {
 
     /*
      * Pour faciliter le passage au joueur suivant
-    */
+     */
     private final DungeonPosition[] POSITIONS = {
         DungeonPosition.P_BARBARIAN_1,
         DungeonPosition.P_BARBARIAN_2,
@@ -69,9 +65,10 @@ public class Game {
      * prénoms.
      *
      * Les prénoms sont imposés; Juste, Pierre, Marlène et François
+     *
      * @throws GameOverException
      */
-    public Game() throws GameOverException{
+    public Game() throws GameOverException {
         this("Juste", "Pierre", "Marlène", "François");
     }
 
@@ -93,24 +90,16 @@ public class Game {
         }
         dungeon = Dungeon.getInstance();
         idCurrent = 0;
+        stateCurrent = BarbarianState.CONTINUE;
         lastPosition = POSITIONS[idCurrent];
         findKey = false;
-        findPrincess = false;
-        turnInProgress = false;
-        idWinner = -1;          // Pas de gagnant
-    }
-
-    void initInstanceForTesting(){
-        idCurrent = 0;
-        lastPosition = POSITIONS[idCurrent];
-        findKey = false;
-        findPrincess = false;
-        turnInProgress = false;
+        findPrincess = false;        
         idWinner = -1;          // Pas de gagnant
     }
 
     /**
      * Getter du donjon
+     *
      * @return le donjon
      */
     public Dungeon getDungeon() {
@@ -121,37 +110,30 @@ public class Game {
 
     /**
      * Setter à visibilité « package » à destination des tests JUnit.
+     *
      * @param aDungeon
      */
-    void setDonjon(Dungeon aDungeon){
+    void setDonjon(Dungeon aDungeon) {
         dungeon = aDungeon;
     }
 
     /**
      * Getter le joueur courant.
+     *
      * @return le joueur courant
      */
-    public Player getCurrentPlayer(){
+    public Player getCurrentPlayer() {
         // Je sais que idCurrent est tjs valide.
         return players.get(idCurrent);
     }
 
     /**
-     * Précise si un barbare est dans la place ou s'il faut passer au joueur
-     * suivant.
+     * Précise si la partie est finie. La partie est finie dès qu'un joueur a
+     * trouvé la princesse.
      *
-     * @return vrai si un barbare est dans le donjon
-     */
-    public boolean isTurnInProgress() {
-        return turnInProgress;
-    }
-
-    /**
-     * Précise si la partie est finie.
-     * La partie est finie dès qu'un joueur a trouvé la princesse.
      * @return vrai dès qu'un barbare a trouvé la princesse
      */
-    public boolean isOver(){
+    public boolean isOver() {
         return idWinner != -1;
     }
 
@@ -160,64 +142,104 @@ public class Game {
      *
      * @return le joueur gagnant ou null si la partie est en cours
      */
-    public Player getWinner(){
+    public Player getWinner() {
         Player winner = null;
-        if ( idWinner != -1) {
+        if (idWinner != -1) {
             winner = players.get(idWinner);
         }
         return winner;
     }
-    
 
     /**
-     * Jouer un coup.
-     * Soit c'est un joueur qui commence son tour, soit c'est le joueur courant
-     * qui retourne une tuile supplémentaire.
+     * Jouer un coup. Soit c'est un joueur qui commence son tour, soit c'est le
+     * joueur courant qui retourne une tuile supplémentaire.
+     *
      * @param d la direction prise par le barbare.
      * @param wt l'arme choisie
-     * @return true si le barbare n'est pas mort, false sinon !
+     * @return l'état dans lequel se trouve le barbare.
      * @throws pbt.gameover.model.GameOverException
      */
-    public boolean play(Direction d, WeaponType wt)throws GameOverException{
-        //@todo vérifier que c'est le bon joueur qui joue (pour l'instant, on
-        // compte sur la vue)
-        boolean isWin = true;
+    public BarbarianState play(Direction d, WeaponType wt) throws GameOverException {
+        /*
+         * Je ne peux me déplacer que si je suis au statut CONTINUE.
+         * Sinon, je dois faire un autre mouvement ou passer au joueur suivant
+         */
+        if (stateCurrent != BarbarianState.CONTINUE) {
+            throw new GameOverException("Ce n'est pas le moment de retourner"
+                    + " une carte");
+        }
         if (idWinner != -1) {
             throw new GameOverException("La partie est finie");
         }
-        // La partie n'est pas finie
-        turnInProgress = true;
-        DungeonPosition newPosition;        
+        DungeonPosition newPosition;
         newPosition = lastPosition.move(d);
+        return play(newPosition, wt);
+    }
+
+    /**
+     * Permet de jouer les coups particuliers: déplacement du blork invincible
+     * et déplacement du barbare(via la gate).
+     *
+     * @param position la nouvelle position
+     * @param wt l'arme éventuelle
+     * @return le nouvel état du barbare
+     * @throws GameOverException
+     */
+    public BarbarianState playSpecial(DungeonPosition position, WeaponType wt)
+            throws GameOverException {
+        if (stateCurrent != BarbarianState.BEAM_ME_UP
+                && stateCurrent != BarbarianState.MOVE_BLORK) {
+            throw new GameOverException("Ce n'est pas le moment de se déplacer "
+                    + "ou de bouger un blork");
+        }
+        if (idWinner != -1) {
+            throw new GameOverException("La partie est finie");
+        }
+        if (stateCurrent == BarbarianState.BEAM_ME_UP) {
+            // Hop, je saute            
+            stateCurrent = play(position, wt);
+        }
+        if (stateCurrent == BarbarianState.MOVE_BLORK) {
+            if (position.isCorner()) {
+                throw new GameOverException("On ne peut pas déplacer un "
+                        + "blork invincible dans un coin");
+            }
+            dungeon.swap(lastPosition, position);
+            stateCurrent = BarbarianState.GAMEOVER;
+        }
+        return stateCurrent;
+    }
+
+    private BarbarianState play(DungeonPosition newPosition, WeaponType wt) {
         dungeon.show(newPosition);
         Room room = dungeon.getRoom(newPosition);
-        // Je mets déjà à jour ma position pour le tour suivant 
+        // Je mets déjà à jour ma position pour le tour suivant
         // (elle changera peut-être si je meurs !)
         lastPosition = newPosition;
         switch (room.getType()) {
             case GATE:
-                    // On ne fait rien dans la v1
+                stateCurrent = BarbarianState.BEAM_ME_UP;
+                break;
             case KEY:
                 findKey = true;
                 checkIfIWin();
                 break;
             case PRINCESS:
-                findPrincess = 
-                        players.get(idCurrent).getColor() == room.getColor();
+                findPrincess
+                        = players.get(idCurrent).getColor() == room.getColor();
                 checkIfIWin();
                 break;
             case BLORK:
-                WeaponType blorkWeakness = room.getWeapon();                
+                WeaponType blorkWeakness = room.getWeapon();
                 // Si blorkWeakness vaut null, c'est un blork invincible
-                // ce sera pour la v2
-                // @todo v2
-                if (blorkWeakness != wt) {                    
-                    //nextPlayer();
-                    isWin = false;
+                if (blorkWeakness == null) {
+                    stateCurrent = BarbarianState.MOVE_BLORK;
+                } else if (blorkWeakness != wt) {
+                    stateCurrent = BarbarianState.GAMEOVER;
                 }
             default:
         }
-        return isWin;
+        return stateCurrent;
     }
 
     private void checkIfIWin() {
@@ -229,12 +251,14 @@ public class Game {
     /**
      * Permet de passer au joueur suivant dès que c'est « Game Over ».
      */
-    public void nextPlayer(){
+    public void nextPlayer() {
+        // Pas de test sur la valeur de stateCurrent car je peux éventuellement
+        // passer au joueur suivant si c'est pas Game Over
         idCurrent = ++idCurrent % players.size();
+        stateCurrent = BarbarianState.CONTINUE;
         findKey = false;
         findPrincess = false;
-        lastPosition = POSITIONS[idCurrent];
-        turnInProgress = false;
+        lastPosition = POSITIONS[idCurrent];        
         dungeon.hideAll();
     }
 

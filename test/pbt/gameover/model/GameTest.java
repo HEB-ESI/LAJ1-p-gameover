@@ -78,9 +78,11 @@ public class GameTest {
         };
         game.setDonjon(new Dungeon(configuration));
         // Je gagne
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         // Je perd
-        assertFalse(game.play(Direction.RIGHT, WeaponType.BLUDGEON));
+        assertTrue(game.play(Direction.RIGHT, WeaponType.BLUDGEON)
+            == BarbarianState.GAMEOVER);
     }
 
     @Test
@@ -94,24 +96,29 @@ public class GameTest {
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
-        assertFalse(game.play(Direction.RIGHT, WeaponType.BLUDGEON));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+            == BarbarianState.CONTINUE);
+        assertTrue(game.play(Direction.RIGHT, WeaponType.BLUDGEON)
+            == BarbarianState.MOVE_BLORK);
     }
 
     @Test
     public void testPlay_3() throws GameOverException {
         System.out.println("play - ne pas perdre contre les gentils");
         Room[][] configuration = {
-            {key, gate, princessRed, null, null},
+            {key, princessBlue, princessRed, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
-        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS));
-        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
+        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
+        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         // En plus j'ai gagné car le premier joueur est rouge
         assertTrue(game.isOver());
     }
@@ -120,16 +127,19 @@ public class GameTest {
     public void testPlay_4() throws GameOverException {
         System.out.println("play - ne pas gagner si l'on se trompe de princesse");
         Room[][] configuration = {
-            {princessGreen, gate, key, null, null},
+            {princessGreen, blorkArrows, key, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
-        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS));
-        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
+        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
+        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         // Attention, je n'ai pas gagné
         assertFalse(game.isOver());
     }
@@ -145,15 +155,20 @@ public class GameTest {
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         assertFalse(game.isOver());
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         assertFalse(game.isOver());
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         assertFalse(game.isOver());
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         assertFalse(game.isOver());
-        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         assertTrue(game.isOver());
     }
 
@@ -168,13 +183,17 @@ public class GameTest {
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         assertFalse(game.isOver());
-        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS));
+        assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
+                == BarbarianState.MOVE_BLORK);
+        assertTrue(game.playSpecial(new DungeonPosition(3, 3), null)
+                == BarbarianState.GAMEOVER);
         // Vérification que le blork est délacé
         // (pour la v2)
         Room room = game.getDungeon().getRoom(new DungeonPosition(1, 0));
-        assertNotSame(room, blorkInvincible);
+        assertNotSame(room,blorkInvincible);
     }
 
     @Test

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pbt.gameover.model;
 
 import java.util.Arrays;
@@ -22,11 +21,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Représente le donjon du jeu, l'endroit où se trouve les blorks,
- * les clés, la porte de transfert … et les princesses.
+ * Représente le donjon du jeu, l'endroit où se trouve les blorks, les clés, la
+ * porte de transfert … et les princesses.
  *
- * Le plateau de jeu est principalement les cartes posées sur celui-ci.
- * Inutile de représenter les barbares ni les cartes « armes ».
+ * Le plateau de jeu est principalement les cartes posées sur celui-ci. Inutile
+ * de représenter les barbares ni les cartes « armes ».
  *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
@@ -37,36 +36,37 @@ public class Dungeon {
     /**
      * Les cartes 5x5 représentant le donjon.
      *
-     * Je parle en terme de ligne, colonne (pas abscisse, ordonnée)
-     * Je considère que le côté en haut à gauche est 0,0
-     * Je ne donne pas de getter vers le tableau.
+     * Je parle en terme de ligne, colonne (pas abscisse, ordonnée) Je considère
+     * que le côté en haut à gauche est 0,0 Je ne donne pas de getter vers le
+     * tableau.
      *
      */
     private Room[][] roomss;
     private static Dungeon instance = null;
 
     /**
-     * Retourne l'instance unique du donjon.
-     * (singleton pattern)
+     * Retourne l'instance unique du donjon. (singleton pattern)
+     *
      * @return le donjon
      */
-    public static Dungeon getInstance(){
-        if (instance == null){
+    public static Dungeon getInstance() {
+        if (instance == null) {
             instance = new Dungeon();
         }
         return instance;
     }
-    
+
     /**
-     * Constructeur permettant d'obtenir un donjon dans une configuration donnée 
-     * à destination des tests. 
-     * 
+     * Constructeur permettant d'obtenir un donjon dans une configuration donnée
+     * à destination des tests.
+     *
      * (Dans la foulée, on illustre l'utilisation de la visibilité package pour
-     * l'implémentation des tests). 
+     * l'implémentation des tests).
+     *
      * @param configuration
-     * @return 
+     * @return le donjon créé sur base de la config en paramètre
      */
-    Dungeon(Room[][] configuration){
+    Dungeon(Room[][] configuration) {
         roomss = configuration;
     }
 
@@ -98,8 +98,7 @@ public class Dungeon {
             new Room(RoomType.BLORK, true, WeaponType.POTION, null),
             // les deux blorks invicibles (pas d'arme pour les vaincre)
             new Room(RoomType.BLORK, true, null, null),
-            new Room(RoomType.BLORK, true, null, null),
-        };
+            new Room(RoomType.BLORK, true, null, null),};
         List<Room> alCards = Arrays.asList(cards);
         Collections.shuffle(alCards);
         for (int i = 0; i < roomss.length; i++) {
@@ -111,10 +110,11 @@ public class Dungeon {
 
     /**
      * Retourne une carte du donjon.
+     *
      * @param p la position dans de donjon
      * @return la carte en question
      */
-    public Room getRoom(DungeonPosition p){
+    public Room getRoom(DungeonPosition p) {
         return roomss[p.getRow()][p.getColumn()];
     }
 
@@ -124,17 +124,30 @@ public class Dungeon {
      *
      * Lorsqu'on entre dans une pièce, il faut ensuite montrer la pièce.
      *
-     * @param p la position de la pièce dans laquelle on entre     
+     * @param p la position de la pièce dans laquelle on entre
      */
-    public void show(DungeonPosition p){
+    public void show(DungeonPosition p) {
         Room room = roomss[p.getRow()][p.getColumn()];
         room.setHidden(false);
     }
 
     /**
+     * Permet d'échanger deux pièces.
+     *
+     * @param one la position de la première pièce
+     * @param two la position de la deuxième pièce
+     */
+    void swap(DungeonPosition one, DungeonPosition two) {
+        Room r = roomss[one.getRow()][one.getColumn()];
+        roomss[one.getRow()][one.getColumn()]
+                = roomss[two.getRow()][two.getColumn()];
+        roomss[two.getRow()][two.getColumn()] = r;
+    }
+
+    /**
      * Cache toutes les pièces du donjon.
      */
-    public void hideAll(){
+    public void hideAll() {
         for (Room[] squares : roomss) {
             for (Room square : squares) {
                 square.setHidden(true);
