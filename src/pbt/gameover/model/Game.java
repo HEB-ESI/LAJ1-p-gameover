@@ -93,7 +93,7 @@ public class Game {
         stateCurrent = BarbarianState.CONTINUE;
         lastPosition = POSITIONS[idCurrent];
         findKey = false;
-        findPrincess = false;        
+        findPrincess = false;
         idWinner = -1;          // Pas de gagnant
     }
 
@@ -177,36 +177,51 @@ public class Game {
     }
 
     /**
-     * Permet de jouer les coups particuliers: déplacement du blork invincible
-     * et déplacement du barbare(via la gate).
+     * Permet de jouer le déplacement du blork invincible.
+     *
+     * @param position la nouvelle position
+     * @return le nouvel état du barbare
+     * @throws GameOverException
+     */
+    public BarbarianState playBlorkInvincible(DungeonPosition position)
+            throws GameOverException {
+        if (stateCurrent != BarbarianState.MOVE_BLORK) {
+            throw new GameOverException("Ce n'est pas le moment "
+                    + "de bouger un blork");
+        }
+        if (idWinner != -1) {
+            throw new GameOverException("La partie est finie");
+        }
+        if (position.isCorner()) {
+            throw new GameOverException("On ne peut pas déplacer un "
+                    + "blork invincible dans un coin");
+        }
+        dungeon.swap(lastPosition, position);
+        dungeon.show(position);
+        dungeon.show(lastPosition);
+        stateCurrent = BarbarianState.GAMEOVER;
+        return stateCurrent;
+    }
+
+    /**
+     * Permet de jouer le déplacement du barbare(via la gate).
      *
      * @param position la nouvelle position
      * @param wt l'arme éventuelle
      * @return le nouvel état du barbare
      * @throws GameOverException
      */
-    public BarbarianState playSpecial(DungeonPosition position, WeaponType wt)
+    public BarbarianState playGate(DungeonPosition position, WeaponType wt)
             throws GameOverException {
-        if (stateCurrent != BarbarianState.BEAM_ME_UP
-                && stateCurrent != BarbarianState.MOVE_BLORK) {
+        if (stateCurrent != BarbarianState.BEAM_ME_UP) {
             throw new GameOverException("Ce n'est pas le moment de se déplacer "
                     + "ou de bouger un blork");
         }
         if (idWinner != -1) {
             throw new GameOverException("La partie est finie");
         }
-        if (stateCurrent == BarbarianState.BEAM_ME_UP) {
-            // Hop, je saute            
-            stateCurrent = play(position, wt);
-        }
-        if (stateCurrent == BarbarianState.MOVE_BLORK) {
-            if (position.isCorner()) {
-                throw new GameOverException("On ne peut pas déplacer un "
-                        + "blork invincible dans un coin");
-            }
-            dungeon.swap(lastPosition, position);
-            stateCurrent = BarbarianState.GAMEOVER;
-        }
+        // Hop, je saute
+        stateCurrent = play(position, wt);
         return stateCurrent;
     }
 
@@ -258,7 +273,7 @@ public class Game {
         stateCurrent = BarbarianState.CONTINUE;
         findKey = false;
         findPrincess = false;
-        lastPosition = POSITIONS[idCurrent];        
+        lastPosition = POSITIONS[idCurrent];
         dungeon.hideAll();
     }
 

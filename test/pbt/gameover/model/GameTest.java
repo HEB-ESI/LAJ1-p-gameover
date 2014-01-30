@@ -179,7 +179,7 @@ public class GameTest {
             {princessBlue, null, null, null, null},
             {blorkInvincible, null, null, null, null},
             {princessYellow, null, null, null, null},
-            {princessRed, key, null, null, null},
+            {princessRed, key, null, gate, null},
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
@@ -188,7 +188,7 @@ public class GameTest {
         assertFalse(game.isOver());
         assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
                 == BarbarianState.MOVE_BLORK);
-        assertTrue(game.playSpecial(new DungeonPosition(3, 3), null)
+        assertTrue(game.playBlorkInvincible(new DungeonPosition(3, 3))
                 == BarbarianState.GAMEOVER);
         // Vérification que le blork est délacé
         // (pour la v2)

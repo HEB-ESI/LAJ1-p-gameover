@@ -31,11 +31,15 @@ package pbt.gameover.model;
 public enum BarbarianState {
     /** Fin du tour pour le petit barbare (c'est au joueur suivant d'avancer) */
     GAMEOVER,
+    /** Je suis devant la porte du donjon, prêt à entrer … */
+    READY_TO_GO,
     /** L'entrée dans la pièce du donjon ne m'a pas tué, je continue. */
     CONTINUE,
     /** Damned ! Je m'ai fait eu (sic) par un blork invincible.
      * Je peux le déplacer. */
     MOVE_BLORK,
     /** Je tombe sur le portail, téléporte-moi … Scotty ! */
-    BEAM_ME_UP;
+    BEAM_ME_UP,
+    /** Hé, j'ai gagné ! */
+    WIN;
 }

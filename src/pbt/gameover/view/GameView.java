@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pbt.gameover.view;
 
 import java.util.HashMap;
 import java.util.Map;
 import pbt.gameover.model.Direction;
+import pbt.gameover.model.DungeonPosition;
 import pbt.gameover.model.Game;
 import pbt.gameover.model.GameOverException;
 import pbt.gameover.model.Player;
@@ -32,17 +32,18 @@ import static pbt.gameover.view.Display.*;
  *
  * Cette classe instancie le jeu et sert d'interface avec les joueurs.
  *
- * Par soucis de facilité et de rapidité, je ne demande pas les noms des joueurs,
- * (ils s'appelleront Juste, François and co) et j'en crée d'office 4.
+ * Par soucis de facilité et de rapidité, je ne demande pas les noms des
+ * joueurs, (ils s'appelleront Juste, François and co) et j'en crée d'office 4.
  * <b>Le jeu se joue donc à 4</b>
- * 
+ *
  * @author Pierre Bettens (pbt) <pbettens@heb.be>
  */
 public class GameView {
-          
+
     private static final WeaponType[] WEAPONS = WeaponType.values();
     private static final Map<Character, Direction> CHAR_DIRECTIONS
             = new HashMap<>(4);
+
     static {
         CHAR_DIRECTIONS.put('u', Direction.UP);
         CHAR_DIRECTIONS.put('r', Direction.RIGHT);
@@ -55,16 +56,16 @@ public class GameView {
         // Tentative de création d'un jeu
         try {
             game = new Game("Juste", "Marlène", "François", "Pierre");
-        } catch (GameOverException e){
+        } catch (GameOverException e) {
             System.err.printf("Tentative abordée de création d'un jeu");
             System.exit(1);
-        }        
+        }
 
         // On joue
         while (!game.isOver()) {
             clear();
             display(game.getCurrentPlayer());
-            display(game.getDungeon());            
+            display(game.getDungeon());
             // Demander le mouvement
             String s;
             do {
@@ -81,19 +82,63 @@ public class GameView {
                 System.exit(0);
             }
             int weapon = Integer.parseInt("" + s.charAt(1)) - 1;
-            try {                
+            try {
                 Direction d = CHAR_DIRECTIONS.get(move);
                 WeaponType wt = WEAPONS[weapon];
                 display("On tente la direction " + d + " avec " + wt + "\n");
-                if (!game.play(d,wt)){
-                    // Game Over
-                    display(CouleurTerminal.RED + "GAME OVER\n\n"
-                            + CouleurTerminal.DEFAULT);
-                    display(game.getDungeon());
-                    game.nextPlayer();
-                    display("Appuie sur une ENTER …\n");
-                    readLine();
-                }                
+                switch (game.play(d, wt)) {
+                    case BEAM_ME_UP:
+                        display(CouleurTerminal.BLUE + "Beam me up, Scotty !\n"
+                                + CouleurTerminal.DEFAULT);
+                        do {
+                            display("\nEntre une position et une arme (ou exit): \n"
+                                    + "ligne,colonne arme\n"
+                                    + "0 = EXIT\n"
+                                    + "1 = potion magique, 2 = flèches, "
+                                    + "3 = massue, 4 = revolver\n\n"
+                                    + "Par exemple: 1,2 3\n\n"
+                                    + "→ ");
+                            s = readLine();
+                        } while (!s.matches("[0]{1}") 
+                                && !s.matches("[(]{0,1}[01234]{1}\\,"
+                                        + "[01234]{1}[)]{0,1} [1234]{1}"));
+                        s = s.replaceAll("[\\(\\)\\, ]", "");
+                        int row = Integer.parseInt("" + s.charAt(0));
+                        int column = Integer.parseInt("" + s.charAt(1));
+                        weapon = Integer.parseInt("" + s.charAt(1)) - 1;
+                        game.playGate(new DungeonPosition(row, column),
+                                WEAPONS[weapon]);
+                        //@todo faire quelque chose avec ce damné résultat ! 
+                        break;
+                    case CONTINUE:
+                        // Rien à faire
+                        break;
+                    case GAMEOVER:
+                        // Game Over
+                        display(CouleurTerminal.RED + "GAME OVER\n\n"
+                                + CouleurTerminal.DEFAULT);
+                        display(game.getDungeon());
+                        game.nextPlayer();
+                        display("Appuie sur une ENTER …\n");
+                        readLine();
+                        break;
+                    case MOVE_BLORK:
+                        display(CouleurTerminal.BLUE + "GAME OVER\n"
+                                + "Déplacement du blork invincible"
+                                + CouleurTerminal.DEFAULT);
+                        do {
+                            display("\nEntre une position (l,c): \n→ ");
+                            s = readLine();
+                        } while (!s.matches("[(]{0,1}[01234]{1}\\,[01234]{1}[)]{0,1}"));
+                        s = s.replaceAll("[\\(\\)\\, ]", "");
+                        row = Integer.parseInt("" + s.charAt(0));
+                        column = Integer.parseInt("" + s.charAt(1));
+                        game.playBlorkInvincible(
+                                new DungeonPosition(row, column));
+                        display(game.getDungeon());
+                        game.nextPlayer();
+                        break;
+                }
             } catch (GameOverException ex) {
                 display("Erreur (" + ex.getMessage() + ")\n");
                 continue;
