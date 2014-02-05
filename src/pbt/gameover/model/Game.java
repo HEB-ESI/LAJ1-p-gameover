@@ -225,7 +225,11 @@ public class Game {
         return stateCurrent;
     }
 
-    private BarbarianState play(DungeonPosition newPosition, WeaponType wt) {
+    private BarbarianState play(DungeonPosition newPosition, WeaponType wt) 
+        throws GameOverException{
+        if (!dungeon.getRoom(newPosition).isHidden()) {
+            throw new GameOverException("La position est déjà visible");
+        }
         dungeon.show(newPosition);
         Room room = dungeon.getRoom(newPosition);
         // Je mets déjà à jour ma position pour le tour suivant
