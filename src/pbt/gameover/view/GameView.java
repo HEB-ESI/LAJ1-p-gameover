@@ -16,8 +16,10 @@
  */
 package pbt.gameover.view;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import pbt.gameover.model.BarbarianState;
 import pbt.gameover.model.Direction;
 import pbt.gameover.model.DungeonPosition;
 import pbt.gameover.model.Game;
@@ -43,106 +45,141 @@ public class GameView {
     private static final WeaponType[] WEAPONS = WeaponType.values();
     private static final Map<Character, Direction> CHAR_DIRECTIONS
             = new HashMap<>(4);
+    private static final Map<BarbarianState, String> STATE_REGEX
+            = new EnumMap<>(BarbarianState.class);
 
     static {
         CHAR_DIRECTIONS.put('u', Direction.UP);
         CHAR_DIRECTIONS.put('r', Direction.RIGHT);
         CHAR_DIRECTIONS.put('d', Direction.DOWN);
         CHAR_DIRECTIONS.put('l', Direction.LEFT);
+        STATE_REGEX.put(BarbarianState.CONTINUE, "[p0]{1}"
+                + "|[udlr]{1}\\s*[1234]{1}");
+        STATE_REGEX.put(BarbarianState.READY_TO_GO, "[p0]{1}"
+                + "|[udlr]{1}\\s*[1234]{1}");
+        STATE_REGEX.put(BarbarianState.BEAM_ME_UP, "[p0]{1}"
+                + "|[b]{1}[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
+                + "\\s*[1234]{1}\\s*");
+        STATE_REGEX.put(BarbarianState.MOVE_BLORK, "[p0]{1}"
+                + "|[m]{1}[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
+                + "\\s*");
+        STATE_REGEX.put(BarbarianState.GAMEOVER, ".*");
     }
 
     public static void main(String[] args) {
         Game game = null;
+        BarbarianState barbarianState = BarbarianState.READY_TO_GO;
+        int row, column;
         // Tentative de création d'un jeu
         try {
             game = new Game("Juste", "Marlène", "François", "Pierre");
+            barbarianState = game.getStateCurrent();
         } catch (GameOverException e) {
             System.err.printf("Tentative abordée de création d'un jeu");
             System.exit(1);
         }
-
         // On joue
         while (!game.isOver()) {
             clear();
             display(game.getCurrentPlayer());
             display(game.getDungeon());
-            // Demander le mouvement
+            /*
+             * Proposer une action
+             */
             String s;
             do {
-                display("\nEntre un mouvement et une arme (ou exit): \n"
-                        + "u = UP, d = DOWN, l = LEFT, r = RIGHT, 0 = EXIT\n"
-                        + "1 = potion magique, 2 = flèches, "
-                        + "3 = massue, 4 = revolver\n\n"
-                        + "Par exemple: u2\n\n"
-                        + "→ ");
+                displayMenu(barbarianState);                
                 s = readLine();
-            } while (!s.matches("[udlr0]{1}[1234]{0,1}"));
-            char move = s.charAt(0);
-            if (move == '0') {
-                System.exit(0);
-            }
-            int weapon = Integer.parseInt("" + s.charAt(1)) - 1;
-            try {
-                Direction d = CHAR_DIRECTIONS.get(move);
-                WeaponType wt = WEAPONS[weapon];
-                display("On tente la direction " + d + " avec " + wt + "\n");
-                switch (game.play(d, wt)) {
-                    case BEAM_ME_UP:
-                        display(CouleurTerminal.BLUE + "Beam me up, Scotty !\n"
-                                + CouleurTerminal.DEFAULT);
-                        do {
-                            display("\nEntre une position et une arme (ou exit): \n"
-                                    + "ligne,colonne arme\n"
-                                    + "0 = EXIT\n"
-                                    + "1 = potion magique, 2 = flèches, "
-                                    + "3 = massue, 4 = revolver\n\n"
-                                    + "Par exemple: 1,2 3\n\n"
-                                    + "→ ");
-                            s = readLine();
-                        } while (!s.matches("[0]{1}") 
-                                && !s.matches("[(]{0,1}[01234]{1}\\,"
-                                        + "[01234]{1}[)]{0,1} [1234]{1}"));
-                        s = s.replaceAll("[\\(\\)\\, ]", "");
-                        int row = Integer.parseInt("" + s.charAt(0));
-                        int column = Integer.parseInt("" + s.charAt(1));
-                        weapon = Integer.parseInt("" + s.charAt(1)) - 1;
-                        game.playGate(new DungeonPosition(row, column),
-                                WEAPONS[weapon]);
-                        //@todo faire quelque chose avec ce damné résultat ! 
-                        break;
-                    case CONTINUE:
-                        // Rien à faire
-                        break;
-                    case GAMEOVER:
-                        // Game Over
-                        display(CouleurTerminal.RED + "GAME OVER\n\n"
-                                + CouleurTerminal.DEFAULT);
-                        display(game.getDungeon());
-                        game.nextPlayer();
-                        display("Appuie sur une ENTER …\n");
-                        readLine();
-                        break;
-                    case MOVE_BLORK:
-                        display(CouleurTerminal.BLUE + "GAME OVER\n"
-                                + "Déplacement du blork invincible"
-                                + CouleurTerminal.DEFAULT);
-                        do {
-                            display("\nEntre une position (l,c): \n→ ");
-                            s = readLine();
-                        } while (!s.matches("[(]{0,1}[01234]{1}\\,[01234]{1}[)]{0,1}"));
-                        s = s.replaceAll("[\\(\\)\\, ]", "");
-                        row = Integer.parseInt("" + s.charAt(0));
-                        column = Integer.parseInt("" + s.charAt(1));
-                        game.playBlorkInvincible(
+            } while (!s.matches(STATE_REGEX.get(barbarianState)));
+            // INVARIANT l'action a effectuer est toujours caractérisée par
+            // la première lettre
+            char action = s.charAt(0);
+            switch (action) {
+                case '0':
+                    System.exit(1);
+                // break; inutile
+                case 'p':
+                    display("Abandont pour ce tour.");
+                    barbarianState = BarbarianState.GAMEOVER;
+                    // Je sais que je passerai au joueur suivant un
+                    // peu plus bas.
+                    break;
+                case 'u':
+                case 'r':
+                case 'l':
+                case 'd':
+                    // Mouvement normal
+                    int weapon = Integer.parseInt("" + s.charAt(1)) - 1;
+                    try {
+                        Direction d = CHAR_DIRECTIONS.get(action);
+                        WeaponType wt = WEAPONS[weapon];
+                        display("On tente la direction " + d + " avec " + wt + "\n");
+                        barbarianState = game.play(d, wt);
+                    } catch (GameOverException ex) {
+                        display("Erreur (" + ex.getMessage() + ")\n");
+                        continue;
+                        // Je m'autorise un continue pour réitérer
+                    }
+                    break;
+                case 'm':
+                    // Déplacement du blork
+                    s = s.replaceAll("[\\(\\)\\, ]", "");
+                    // Après nettoyage, c'est de la forme m12
+                    row = Integer.parseInt("" + s.charAt(1));
+                    column = Integer.parseInt("" + s.charAt(2));
+                    try {
+                        display("On déplace le blork à la position (" + row
+                                + "," + column + ")\n");
+                        barbarianState = game.playBlorkInvincible(
                                 new DungeonPosition(row, column));
-                        display(game.getDungeon());
-                        game.nextPlayer();
-                        break;
-                }
-            } catch (GameOverException ex) {
-                display("Erreur (" + ex.getMessage() + ")\n");
-                continue;
-                // Je m'autorise un continue pour réitérer
+                    } catch (GameOverException ex) {
+                        display("Erreur (" + ex.getMessage() + ")\n");
+                        continue;
+                        // Je m'autorise un continue pour réitérer
+                    }
+                    break;
+                case 'b':
+                    // Beam me up, Scotty !
+                    s = s.replaceAll("[\\(\\)\\, ]", "");
+                    // Après nettoyage, c'est de la forme b123
+                    row = Integer.parseInt("" + s.charAt(1));
+                    column = Integer.parseInt("" + s.charAt(2));
+                    weapon = Integer.parseInt("" + s.charAt(3)) - 1;
+                    try {
+                        WeaponType wt = WEAPONS[weapon];
+                        display("On tente la position (" + row + ","
+                                + column + ") avec " + wt + "\n");
+                        barbarianState = game.playGate(new DungeonPosition(row, column), wt);
+                    } catch (GameOverException ex) {
+                        display("Erreur (" + ex.getMessage() + ")\n");
+                        continue;
+                        // Je m'autorise un continue pour réitérer
+                    }
+                    break;
+                default:
+                    display("Action non prise en charge (" + action + ")");
+                    continue;
+            }
+            /*
+             * Traitement du résultat s'il échet
+             * En général, je ne fais rien et redemande une action
+             */
+            switch (barbarianState) {
+                case CONTINUE:
+                case BEAM_ME_UP:
+                case MOVE_BLORK:
+                case READY_TO_GO:
+                    break;
+                case GAMEOVER:
+                    // Game Over
+                    display(CouleurTerminal.RED + "GAME OVER\n\n"
+                            + CouleurTerminal.DEFAULT);
+                    display(game.getDungeon());
+                    game.nextPlayer();
+                    barbarianState = game.getStateCurrent();
+                    display("Appuie sur une ENTER …\n");
+                    readLine();
+                    break;
             }
         }
         Player winner = game.getWinner();

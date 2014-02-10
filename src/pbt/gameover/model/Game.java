@@ -43,8 +43,8 @@ public class Game {
     /*
      * Pour gagner, il faut la princesse et la clé.
      */
-    private boolean findKey;
-    private boolean findPrincess;
+    private boolean keyFound;
+    private boolean princessFound;
     /* La partie est finie dès qu'une princesse est trouvée, idWinner
      * passe de -1 à l'id du gagnant
      */
@@ -92,8 +92,8 @@ public class Game {
         idCurrent = 0;
         stateCurrent = BarbarianState.CONTINUE;
         lastPosition = POSITIONS[idCurrent];
-        findKey = false;
-        findPrincess = false;
+        keyFound = false;
+        princessFound = false;
         idWinner = -1;          // Pas de gagnant
     }
 
@@ -150,6 +150,12 @@ public class Game {
         return winner;
     }
 
+    public BarbarianState getStateCurrent() {
+        return stateCurrent;
+    }
+
+    
+
     /**
      * Jouer un coup. Soit c'est un joueur qui commence son tour, soit c'est le
      * joueur courant qui retourne une tuile supplémentaire.
@@ -196,9 +202,9 @@ public class Game {
             throw new GameOverException("On ne peut pas déplacer un "
                     + "blork invincible dans un coin");
         }
+        dungeon.hide(lastPosition);
         dungeon.swap(lastPosition, position);
-        dungeon.show(position);
-        dungeon.show(lastPosition);
+        dungeon.show(position);        
         stateCurrent = BarbarianState.GAMEOVER;
         return stateCurrent;
     }
@@ -226,7 +232,7 @@ public class Game {
     }
 
     private BarbarianState play(DungeonPosition newPosition, WeaponType wt) 
-        throws GameOverException{
+        throws GameOverException{        
         if (!dungeon.getRoom(newPosition).isHidden()) {
             throw new GameOverException("La position est déjà visible");
         }
@@ -240,11 +246,11 @@ public class Game {
                 stateCurrent = BarbarianState.BEAM_ME_UP;
                 break;
             case KEY:
-                findKey = true;
+                keyFound = true;
                 checkIfIWin();
                 break;
             case PRINCESS:
-                findPrincess
+                princessFound
                         = players.get(idCurrent).getColor() == room.getColor();
                 checkIfIWin();
                 break;
@@ -262,7 +268,7 @@ public class Game {
     }
 
     private void checkIfIWin() {
-        if (findKey && findPrincess) {
+        if (keyFound && princessFound) {
             idWinner = idCurrent;
         }
     }
@@ -275,8 +281,8 @@ public class Game {
         // passer au joueur suivant si c'est pas Game Over
         idCurrent = ++idCurrent % players.size();
         stateCurrent = BarbarianState.CONTINUE;
-        findKey = false;
-        findPrincess = false;
+        keyFound = false;
+        princessFound = false;
         lastPosition = POSITIONS[idCurrent];
         dungeon.hideAll();
     }

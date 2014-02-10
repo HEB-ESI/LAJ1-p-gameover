@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ *sho
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -129,6 +129,15 @@ public class Dungeon {
     public void show(DungeonPosition p) {
         Room room = roomss[p.getRow()][p.getColumn()];
         room.setHidden(false);
+    }
+
+    /**
+     * Cacher une pièce du donjon. 
+     * @param p
+     */
+    public void hide(DungeonPosition p) {
+        Room room = roomss[p.getRow()][p.getColumn()];
+        room.setHidden(true);
     }
 
     /**

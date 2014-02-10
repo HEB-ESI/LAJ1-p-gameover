@@ -17,6 +17,7 @@
 package pbt.gameover.view;
 
 import java.io.Console;
+import pbt.gameover.model.BarbarianState;
 import pbt.gameover.model.Dungeon;
 import pbt.gameover.model.DungeonPosition;
 import pbt.gameover.model.Game;
@@ -32,11 +33,9 @@ import static pbt.gameover.view.CouleurTerminal.*;
  *
  * Remarque sur les caractères spéciaux 𝄞 = U+1D11E	pas représentable en char
  *
- * 1/ convertir en binaire 1101000100011110
- * 2/ 10 bits faibles 0100011110 = 11E
- * 3/ 10 bits forts 0000110100 = 34
- * 4/ Ajouter aux faibles DC00 → DC00 + 11E = DD1E
- * 5/ Ajouter aux forts D800 → D800 + 34 = D834
+ * 1/ convertir en binaire 1101000100011110 2/ 10 bits faibles 0100011110 = 11E
+ * 3/ 10 bits forts 0000110100 = 34 4/ Ajouter aux faibles DC00 → DC00 + 11E =
+ * DD1E 5/ Ajouter aux forts D800 → D800 + 34 = D834
  *
  * Remarque au sujet de la méthode readLine Dans une classe dédiée à
  * l'affichage, c'est dommage d'ajouter une méthode qui fait une lecture … mais
@@ -89,7 +88,7 @@ public class Display {
      */
     public static void display(Dungeon d) {
         Room room;
-        try {            
+        try {
             CONSOLE.printf(RED + "  " + ENTRY_UP_DOWN + DEFAULT + "\n");
             for (int i = 0; i < Dungeon.N; i++) {
                 if (i == Dungeon.N - 1) {
@@ -115,7 +114,7 @@ public class Display {
                     CONSOLE.printf("\n");
                 }
                 CONSOLE.printf("\n");
-            }            
+            }
             CONSOLE.printf(BLUE + "                      "
                     + ENtRY_DOWN_UP + DEFAULT);
             CONSOLE.printf("\n");
@@ -163,13 +162,13 @@ public class Display {
     /**
      * Affiche une pièce du donjon.
      *
-     * N'affiche pas la décoration du la pièce, simplement son état par le
-     * biais de 2 caractères.
+     * N'affiche pas la décoration du la pièce, simplement son état par le biais
+     * de 2 caractères.
      *
      * @param r la pièce du donjon à afficher
      */
     public static void display(Room r) {
-        String s = " ";        
+        String s = " ";
         if (r.isHidden()) {
             s = " \u26BF ";
         } else {
@@ -246,6 +245,47 @@ public class Display {
         } else {
             CONSOLE.printf("Le gagnant est %s", winner.getName());
         }
+    }
+
+    /**
+     * Affiche le menu en foction de l'état du jeu, c'est à dire en fonction du
+     * coup que le barbare pourra jouer.
+     *
+     * @todo implement
+     * @param state
+     */
+    public static void displayMenu(BarbarianState state) {
+        String display;
+        switch (state) {
+            case READY_TO_GO:
+            case CONTINUE:
+                display = "\nEntre un mouvement et une arme (ou exit): \n"
+                        + "u = UP, d = DOWN, l = LEFT, r = RIGHT, p= PASS, 0 = EXIT\n"
+                        + "1 = potion magique, 2 = flèches, "
+                        + "3 = massue, 4 = revolver\n\n"
+                        + "Par exemple: u2\n\n"
+                        + "→ ";
+                break;
+            case BEAM_ME_UP:
+                display = "\nBeam me up, Scotty ! \n"
+                        + "Entre b<arme> et une position (ou exit):\n"
+                        + "b = BEAM ME UP, p=PASS,0 = EXIT\n"
+                        + "1 = potion magique, 2 = flèches, "
+                        + "3 = massue, 4 = revolver\n\n"
+                        + "Par exemple: b3 4,2\n\n"
+                        + "→";
+                break;
+            case MOVE_BLORK:
+                display = "\nGrr, mort … déplaçons ce blork.\n"
+                        + "Entre m et une position (ou exit):\n"
+                        + "m = MOVE BLORK, p=PASS,0 = EXIT\n"
+                        + "Par exemple: m 4,2\n\n"
+                        + "→";
+                break;
+            default:
+                display = "GLUP ! (" + state + ")\n";
+        }
+        CONSOLE.printf(display);
     }
 
     /**
