@@ -132,7 +132,47 @@ public class Dungeon {
     }
 
     /**
-     * Cacher une pièce du donjon. 
+     * Vérifie si les cases autours sont visibles.
+     *
+     * @param p la position testée
+     * @return vrai si la case est entourée de cases face visible
+     */
+    public boolean isSurrounded(DungeonPosition p) {
+        int row = p.getRow();
+        int column = p.getColumn();
+        // À priori, la position est encerclée … sauf si je trouve une
+        // case cachée.
+        boolean isSurrounded = true;
+        if (row-1 > 0) {
+            if (column-1 > 0 && isSurrounded) {
+                isSurrounded &= !roomss[row-1][column-1].isHidden();
+            }
+            isSurrounded &= !roomss[row-1][column].isHidden();
+            if (column+1 < N && isSurrounded) {
+                isSurrounded &= !roomss[row-1][column+1].isHidden();
+            }
+        }
+        if (column-1 > 0 && isSurrounded) {
+            isSurrounded &= !roomss[row][column-1].isHidden();
+        }
+        if (column+1 < N && isSurrounded) {
+            isSurrounded &= !roomss[row][column+1].isHidden();
+        }
+        if (row+1 < N && isSurrounded) {
+            if (column-1 > 0 && isSurrounded) {
+                isSurrounded &= !roomss[row+1][column-1].isHidden();
+            }
+            isSurrounded &= !roomss[row+1][column].isHidden();
+            if (column+1 < N && isSurrounded) {
+                isSurrounded &= !roomss[row+1][column+1].isHidden();
+            }
+        }
+        return isSurrounded;
+    }
+
+    /**
+     * Cacher une pièce du donjon.
+     *
      * @param p
      */
     public void hide(DungeonPosition p) {

@@ -58,10 +58,10 @@ public class GameView {
         STATE_REGEX.put(BarbarianState.READY_TO_GO, "[p0]{1}"
                 + "|[udlr]{1}\\s*[1234]{1}");
         STATE_REGEX.put(BarbarianState.BEAM_ME_UP, "[p0]{1}"
-                + "|[b]{1}[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
+                + "|[b]{1}\\s*[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
                 + "\\s*[1234]{1}\\s*");
         STATE_REGEX.put(BarbarianState.MOVE_BLORK, "[p0]{1}"
-                + "|[m]{1}[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
+                + "|[m]{1}\\s*[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
                 + "\\s*");
         STATE_REGEX.put(BarbarianState.GAMEOVER, ".*");
     }
@@ -99,7 +99,7 @@ public class GameView {
                     System.exit(1);
                 // break; inutile
                 case 'p':
-                    display("Abandont pour ce tour.");
+                    display("Abandon pour ce tour.");
                     barbarianState = BarbarianState.GAMEOVER;
                     // Je sais que je passerai au joueur suivant un
                     // peu plus bas.

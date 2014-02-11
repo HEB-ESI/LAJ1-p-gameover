@@ -236,6 +236,10 @@ public class Game {
         if (!dungeon.getRoom(newPosition).isHidden()) {
             throw new GameOverException("La position est déjà visible");
         }
+        if (dungeon.isSurrounded(newPosition)) {
+            throw new GameOverException("Il est interdit d'être entouré de "
+                    + "pièces « visibles »");
+        }
         dungeon.show(newPosition);
         Room room = dungeon.getRoom(newPosition);
         // Je mets déjà à jour ma position pour le tour suivant

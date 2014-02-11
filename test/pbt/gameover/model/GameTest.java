@@ -70,18 +70,22 @@ public class GameTest {
     public void testPlay_1() throws GameOverException {
         System.out.println("play - gagner ou perdre contre un blork");
         Room[][] configuration = {
-            {blorkArrows, blorkArrows, null, null, null},
-            {null, null, null, null, null},
+            {blorkArrows, gate, null, null, null},
+            {princessBlue, blorkArrows, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null}
         };
         game.setDonjon(new Dungeon(configuration));
         // Je gagne
+        System.err.println("DEBUG position est caché: " + configuration[0][0].isHidden());
+        System.err.println("DEBUG position est caché: " + configuration[1][1].isHidden());
         assertTrue(game.play(Direction.DOWN, WeaponType.ARROWS)
                 == BarbarianState.CONTINUE);
+        assertTrue(game.play(Direction.RIGHT, WeaponType.ARROWS)
+                == BarbarianState.CONTINUE);
         // Je perd
-        assertTrue(game.play(Direction.RIGHT, WeaponType.BLUDGEON)
+        assertTrue(game.play(Direction.DOWN, WeaponType.BLUDGEON)
             == BarbarianState.GAMEOVER);
     }
 
