@@ -40,6 +40,8 @@ public enum BarbarianState {
     MOVE_BLORK,
     /** Je tombe sur le portail, téléporte-moi … Scotty ! */
     BEAM_ME_UP,
+    /** Je suis débutant, je vais jouer mon joker et reproposer une arme */
+    JOKER,
     /** Hé, j'ai gagné ! */
     WIN;
 }

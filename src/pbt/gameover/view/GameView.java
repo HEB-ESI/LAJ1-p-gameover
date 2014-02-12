@@ -59,9 +59,12 @@ public class GameView {
                 + "|[udlr]{1}\\s*[1234]{1}");
         STATE_REGEX.put(BarbarianState.BEAM_ME_UP, "[p0]{1}"
                 + "|[b]{1}\\s*[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
-                + "\\s*[1234]{1}\\s*");
+                + "\\s+[1234]{1}\\s*");
         STATE_REGEX.put(BarbarianState.MOVE_BLORK, "[p0]{1}"
                 + "|[m]{1}\\s*[(]{0,1}[01234]{1}\\,{0,1}[01234]{1}[)]{0,1}"
+                + "\\s*");
+        STATE_REGEX.put(BarbarianState.JOKER, "[p0]{1}"
+                + "|[j]{1}\\s*[01234]{1}"
                 + "\\s*");
         STATE_REGEX.put(BarbarianState.GAMEOVER, ".*");
     }
@@ -79,7 +82,7 @@ public class GameView {
             System.exit(1);
         }
         // On joue
-        while (!game.isOver()) {
+        while (!game.isOver()) {            
             clear();
             display(game.getCurrentPlayer());
             display(game.getDungeon());
@@ -88,7 +91,7 @@ public class GameView {
              */
             String s;
             do {
-                displayMenu(barbarianState);                
+                displayMenu(barbarianState);
                 s = readLine();
             } while (!s.matches(STATE_REGEX.get(barbarianState)));
             // INVARIANT l'action a effectuer est toujours caractérisée par
@@ -139,7 +142,7 @@ public class GameView {
                     }
                     break;
                 case 'b':
-                    // Beam me up, Scotty !
+                    // Beam me up, Scotty !                    
                     s = s.replaceAll("[\\(\\)\\, ]", "");
                     // Après nettoyage, c'est de la forme b123
                     row = Integer.parseInt("" + s.charAt(1));
@@ -149,7 +152,22 @@ public class GameView {
                         WeaponType wt = WEAPONS[weapon];
                         display("On tente la position (" + row + ","
                                 + column + ") avec " + wt + "\n");
-                        barbarianState = game.playGate(new DungeonPosition(row, column), wt);
+                        barbarianState = game.playGate(
+                                new DungeonPosition(row, column), wt);
+                    } catch (GameOverException ex) {
+                        display("Erreur (" + ex.getMessage() + ")\n");
+                        continue;
+                        // Je m'autorise un continue pour réitérer
+                    }
+                    break;
+                case 'j':
+                    // Yes ! Un joker.
+                    s = s.replaceAll("[ ]", "");
+                    weapon = Integer.parseInt("" + s.charAt(1)) - 1;
+                    try {
+                        WeaponType wt = WEAPONS[weapon];
+                        display("On retente avec " + wt + "\n");
+                        barbarianState = game.playJoker(wt);
                     } catch (GameOverException ex) {
                         display("Erreur (" + ex.getMessage() + ")\n");
                         continue;
@@ -169,6 +187,7 @@ public class GameView {
                 case BEAM_ME_UP:
                 case MOVE_BLORK:
                 case READY_TO_GO:
+                case JOKER:
                     break;
                 case GAMEOVER:
                     // Game Over

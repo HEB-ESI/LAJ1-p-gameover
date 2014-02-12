@@ -243,7 +243,7 @@ public class Display {
         if (winner == null) {
             CONSOLE.printf("Pas de gagnant");
         } else {
-            CONSOLE.printf("Le gagnant est %s", winner.getName());
+            CONSOLE.printf("Le gagnant est %s\n", winner.getName());
         }
     }
 
@@ -268,18 +268,27 @@ public class Display {
                 break;
             case BEAM_ME_UP:
                 display = "\nBeam me up, Scotty ! \n"
-                        + "Entre b<arme> et une position (ou exit):\n"
-                        + "b = BEAM ME UP, p=PASS,0 = EXIT\n"
+                        + "Entre b, une position  et une arme (ou exit):\n"
+                        + "b = BEAM ME UP, p = PASS, 0 = EXIT\n"
                         + "1 = potion magique, 2 = flèches, "
                         + "3 = massue, 4 = revolver\n\n"
-                        + "Par exemple: b3 4,2\n\n"
+                        + "Par exemple: b (4,2) 3\n\n"
                         + "→";
                 break;
             case MOVE_BLORK:
                 display = "\nGrr, mort … déplaçons ce blork.\n"
                         + "Entre m et une position (ou exit):\n"
-                        + "m = MOVE BLORK, p=PASS,0 = EXIT\n"
+                        + "m = MOVE BLORK, p = PASS, 0 = EXIT\n"
                         + "Par exemple: m 4,2\n\n"
+                        + "→";
+                break;
+            case JOKER:
+                display = "\nJOKER\n"
+                        + "Entre j<arme> (ou exit):\n"
+                        + "j = JOKER, p = PASS, 0 = EXIT\n"
+                        + "1 = potion magique, 2 = flèches, "
+                        + "3 = massue, 4 = revolver\n\n"
+                        + "Par exemple: j3\n\n"
                         + "→";
                 break;
             default:

@@ -49,6 +49,10 @@ public class Game {
      * passe de -1 à l'id du gagnant
      */
     private int idWinner;
+    /* Je dois mémoriser si je joker a été joué dans un tour de jeu
+     * (le sais qu'il ne le sera pas si le joueur n'est pas débutant)
+    */
+    private boolean jokerUsed;
 
     /*
      * Pour faciliter le passage au joueur suivant
@@ -86,6 +90,8 @@ public class Game {
         for (String name : names) {
             Player p = new Player();
             p.setName(name);
+            // @todo Temporairement, je place tous mes joueurs en débutant
+            //p.setBeginner(true);
             players.add(p);
         }
         dungeon = Dungeon.getInstance();
@@ -95,6 +101,7 @@ public class Game {
         keyFound = false;
         princessFound = false;
         idWinner = -1;          // Pas de gagnant
+        jokerUsed = false;
     }
 
     /**
@@ -154,8 +161,6 @@ public class Game {
         return stateCurrent;
     }
 
-    
-
     /**
      * Jouer un coup. Soit c'est un joueur qui commence son tour, soit c'est le
      * joueur courant qui retourne une tuile supplémentaire.
@@ -185,6 +190,9 @@ public class Game {
     /**
      * Permet de jouer le déplacement du blork invincible.
      *
+     * v2 Si le joueur est un joueur débutant, il peut continuer de jouer après
+     * avoir déplacé son blork.
+     *
      * @param position la nouvelle position
      * @return le nouvel état du barbare
      * @throws GameOverException
@@ -202,10 +210,18 @@ public class Game {
             throw new GameOverException("On ne peut pas déplacer un "
                     + "blork invincible dans un coin");
         }
-        dungeon.hide(lastPosition);
         dungeon.swap(lastPosition, position);
-        dungeon.show(position);        
-        stateCurrent = BarbarianState.GAMEOVER;
+        dungeon.hide(lastPosition);
+        dungeon.show(position);
+        if (players.get(idCurrent).isBeginner() && !jokerUsed) {
+            stateCurrent = BarbarianState.CONTINUE;
+            dungeon.show(lastPosition);
+            jokerUsed = true;
+        } else {
+            stateCurrent = BarbarianState.GAMEOVER;
+        }
+        //@todo la dernière position est probablement incorrecte maintenant
+        // envisager d'avoir une liste des positions finalement
         return stateCurrent;
     }
 
@@ -231,8 +247,30 @@ public class Game {
         return stateCurrent;
     }
 
-    private BarbarianState play(DungeonPosition newPosition, WeaponType wt) 
-        throws GameOverException{        
+    /**
+     * Je joue mon joker, c'est-à-dire que je peux reproposer une arme si je
+     * m'ai fait eu (sic).
+     *
+     * @param wt la nouvelle arme
+     * @return mon nouvel état
+     * @throws GameOverException
+     */
+    public BarbarianState playJoker(WeaponType wt) throws GameOverException {
+        if (stateCurrent != BarbarianState.JOKER) {
+            throw new GameOverException("Ce n'est pas le moment de jouer "
+                    + "son joker");
+        }
+        if (idWinner != -1) {
+            throw new GameOverException("La partie est finie");
+        }
+        // Je rejoue ma position
+        jokerUsed = true;
+        stateCurrent = play(lastPosition, wt);        
+        return stateCurrent;
+    }
+
+    private BarbarianState play(DungeonPosition newPosition, WeaponType wt)
+            throws GameOverException {
         if (!dungeon.getRoom(newPosition).isHidden()) {
             throw new GameOverException("La position est déjà visible");
         }
@@ -244,27 +282,38 @@ public class Game {
         Room room = dungeon.getRoom(newPosition);
         // Je mets déjà à jour ma position pour le tour suivant
         // (elle changera peut-être si je meurs !)
-        lastPosition = newPosition;
+         lastPosition = newPosition;
         switch (room.getType()) {
             case GATE:
                 stateCurrent = BarbarianState.BEAM_ME_UP;
                 break;
             case KEY:
                 keyFound = true;
+                stateCurrent = BarbarianState.CONTINUE;
+               // lastPosition = newPosition;
                 checkIfIWin();
                 break;
             case PRINCESS:
                 princessFound
                         = players.get(idCurrent).getColor() == room.getColor();
+                stateCurrent = BarbarianState.CONTINUE;
+              //  lastPosition = newPosition;
                 checkIfIWin();
                 break;
             case BLORK:
                 WeaponType blorkWeakness = room.getWeapon();
+                // À priori je gagne … on verra dans les tests en dessous ! 
+                stateCurrent = BarbarianState.CONTINUE;
                 // Si blorkWeakness vaut null, c'est un blork invincible
                 if (blorkWeakness == null) {
                     stateCurrent = BarbarianState.MOVE_BLORK;
                 } else if (blorkWeakness != wt) {
-                    stateCurrent = BarbarianState.GAMEOVER;
+                    if (players.get(idCurrent).isBeginner() && !jokerUsed) {
+                        stateCurrent = BarbarianState.JOKER;
+                        dungeon.hide(newPosition);                        
+                    } else {
+                        stateCurrent = BarbarianState.GAMEOVER;                        
+                    }
                 }
             default:
         }
@@ -287,6 +336,7 @@ public class Game {
         stateCurrent = BarbarianState.CONTINUE;
         keyFound = false;
         princessFound = false;
+        jokerUsed = false;
         lastPosition = POSITIONS[idCurrent];
         dungeon.hideAll();
     }
