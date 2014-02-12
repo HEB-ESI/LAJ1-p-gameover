@@ -1,14 +1,27 @@
 #LAJ1 Projet « Game Over »
 
-Le projet est une implémentation du jeu « Game Over » dans le cadre des laboratiores java de BAC1 à HEB-ÉSI.
+Le projet est une implémentation du jeu « Game Over » dans le cadre des
+laboratoires java de BAC1 à HEB-ÉSI.
 
-![Image](gameover.png)
+![Image](img/gameover.png)
 
 *Une solution du projet de 2013-2014*
 
-##Ressources
+    |-enonce
+	|-img
+    |-plan-tests
+    |-src
+    |---pbt
+    |-----gameover
+    |-------model
+    |-------view
+    |-test
+    |---pbt
+    |-----gameover
+    |-------model
 
-[Le projet d'énoncé](LAJ1-Projet_GameOver.md)
+
+##Ressources
 
 Les règles du jeu:
 
@@ -22,12 +35,20 @@ Les règles du jeu:
 * v2 · Deuxième version du projet avec fonctionnalités supplémentaires **phase 2**
      * Ajout du déplacement du Barbare lorsqu'il rencontre la porte de téléportation (*gate*)
      * Ajout de l'échange des pièces (*room*) lorsque l'on tombe sur un des deux blorks invincibles
+	 * Ajout de l'interdiction de se retrouver entouré de pièces déjà visibles
+	 * Ajout de deux fonctionnalités supplémentaires n'apparaissant pas dans les
+	 règles originales:
+	     * lecture des joueurs dans un fichier dont le nom est passé en argument
+		   au programme;
+		 * ajout d'un statut de débutant à certains joueurs leur donnant
+		   certains privilèges.
 * v3 · La version de l'examen du septembre
 
 ##Auteurs
 
 *Code* Pierre Bettens <pbettens@heb.be>  
-*Énoncé* Nicolas Pettiaux <npettiaux@heb.be>
+*Énoncé* Nicolas Pettiaux <npettiaux@heb.be>  
+*Relecture* Marco Codutti <mcodutti@heb.be> et Catherine Leruste <cleruste@heb.be>
 
 
 
