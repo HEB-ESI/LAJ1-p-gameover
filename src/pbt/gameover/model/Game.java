@@ -110,7 +110,7 @@ public class Game {
      * @return le donjon
      */
     public Dungeon getDungeon() {
-        //@todo v2 Dungeon devrait être clonebale et je devrais renvoyer une
+        //@todo v(n+1) Dungeon devrait être clonebale et je devrais renvoyer une
         // copie. aucune raison que la vue ne modifie mon donjon ! 
         return dungeon;
     }

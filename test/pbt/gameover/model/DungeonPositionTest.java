@@ -47,6 +47,35 @@ public class DungeonPositionTest {
         }
     }
 
+	/**
+	 * Test du constructeur.
+	 */
+	@Test
+	public void testConstructeur() throws GameOverException {
+		System.out.println("constructeur true");
+		new DungeonPosition(0,0);
+		new DungeonPosition(0,4);
+		new DungeonPosition(4,0);
+		new DungeonPosition(4,4);
+		new DungeonPosition(0,2);
+		new DungeonPosition(2,2);
+		new DungeonPosition(1,3);
+		assertTrue(true);
+	}
+
+	/**
+	 * Test du constructeur.
+	 * Erreurs
+	 */
+     @Test(expected = GameOverException.class)
+	 public void testConstructeurFalse() throws GameOverException {
+		 new DungeonPosition(-1,0);
+		 new DungeonPosition(0,-1);
+		 new DungeonPosition(-1,-1);
+		 new DungeonPosition(5,5);
+		 fail("Test fail");
+	 }
+
     /**
      * Test of move method, of class DungeonPosition.
      */
@@ -72,6 +101,8 @@ public class DungeonPositionTest {
         System.out.println("move up, down, left, right out of bound");
         DungeonPosition instance = POSITION_NO;
         DungeonPosition result = instance.move(Direction.UP);
+        instance = POSITION_NO;
+        result = instance.move(Direction.LEFT);
         fail("Test fail");
     }
 
@@ -83,6 +114,8 @@ public class DungeonPositionTest {
         System.out.println("move up, down, left, right out of bound");
         DungeonPosition instance = POSITION_NE;
         DungeonPosition result = instance.move(Direction.RIGHT);
+        instance = POSITION_NE;
+        result = instance.move(Direction.UP);
         fail("Test fail");
     }
 
@@ -94,6 +127,8 @@ public class DungeonPositionTest {
         System.out.println("move up, down, left, right out of bound");
         DungeonPosition instance = POSITION_SO;
         DungeonPosition result = instance.move(Direction.DOWN);
+        instance = POSITION_SO;
+        result = instance.move(Direction.LEFT);
         fail("Test fail");
     }
 
@@ -105,7 +140,37 @@ public class DungeonPositionTest {
         System.out.println("move up, down, left, right out of bound");
         DungeonPosition instance = POSITION_SE;
         DungeonPosition result = instance.move(Direction.RIGHT);
+        instance = POSITION_SE;
+        result = instance.move(Direction.DOWN);
         fail("Test fail");
+    }
+
+      /**
+     * Test of move method, of class DungeonPosition.
+     */
+    @Test
+    public void testMove_corner_ok() throws GameOverException {
+        System.out.println("mouvements corrects à partir des coins");
+        DungeonPosition instance = POSITION_NO;
+        DungeonPosition result = instance.move(Direction.DOWN);
+        assertEquals(result, new DungeonPosition(1, 0));
+        result = instance.move(Direction.RIGHT);
+        assertEquals(result, new DungeonPosition(0, 1));
+        instance = POSITION_NE;
+        result = instance.move(Direction.DOWN);
+        assertEquals(result, new DungeonPosition(1, Dungeon.N-1));
+        result = instance.move(Direction.LEFT);
+        assertEquals(result, new DungeonPosition(0, Dungeon.N-2));
+        instance = POSITION_SO;
+        result = instance.move(Direction.UP);
+        assertEquals(result, new DungeonPosition(Dungeon.N-2, 0));
+        result = instance.move(Direction.RIGHT);
+        assertEquals(result, new DungeonPosition(Dungeon.N-1, 1));
+        instance = POSITION_SE;
+        result = instance.move(Direction.UP);
+        assertEquals(result, new DungeonPosition(Dungeon.N-2, Dungeon.N-1));
+        result = instance.move(Direction.LEFT);
+        assertEquals(result, new DungeonPosition(Dungeon.N-1, Dungeon.N-2));
     }
 
     @Test
