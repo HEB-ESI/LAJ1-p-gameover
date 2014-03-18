@@ -9,7 +9,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General Public plLicense for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -51,7 +51,7 @@ public class Game {
     private int idWinner;
     /* Je dois mémoriser si je joker a été joué dans un tour de jeu
      * (le sais qu'il ne le sera pas si le joueur n'est pas débutant)
-    */
+     */
     private boolean jokerUsed;
 
     /*
@@ -94,6 +94,24 @@ public class Game {
             //p.setBeginner(true);
             players.add(p);
         }
+        init();
+    }
+
+    /**
+     * Constructeur du jeu.
+     *
+     * @param somePlayers les players
+     * @throws GameOverException
+     */
+    public Game(List<Player> somePlayers) throws GameOverException {
+        if (somePlayers.size() < 2 || somePlayers.size() > 4) {
+            throw new GameOverException("Il faut 2,3 ou 4 joueurs");
+        }
+        players = somePlayers;
+        init();
+    }
+
+    private void init() {
         dungeon = Dungeon.getInstance();
         idCurrent = 0;
         stateCurrent = BarbarianState.CONTINUE;
@@ -265,7 +283,7 @@ public class Game {
         }
         // Je rejoue ma position
         jokerUsed = true;
-        stateCurrent = play(lastPosition, wt);        
+        stateCurrent = play(lastPosition, wt);
         return stateCurrent;
     }
 
@@ -282,7 +300,7 @@ public class Game {
         Room room = dungeon.getRoom(newPosition);
         // Je mets déjà à jour ma position pour le tour suivant
         // (elle changera peut-être si je meurs !)
-         lastPosition = newPosition;
+        lastPosition = newPosition;
         switch (room.getType()) {
             case GATE:
                 stateCurrent = BarbarianState.BEAM_ME_UP;
@@ -290,14 +308,14 @@ public class Game {
             case KEY:
                 keyFound = true;
                 stateCurrent = BarbarianState.CONTINUE;
-               // lastPosition = newPosition;
+                // lastPosition = newPosition;
                 checkIfIWin();
                 break;
             case PRINCESS:
                 princessFound
                         = players.get(idCurrent).getColor() == room.getColor();
                 stateCurrent = BarbarianState.CONTINUE;
-              //  lastPosition = newPosition;
+                //  lastPosition = newPosition;
                 checkIfIWin();
                 break;
             case BLORK:
@@ -310,9 +328,9 @@ public class Game {
                 } else if (blorkWeakness != wt) {
                     if (players.get(idCurrent).isBeginner() && !jokerUsed) {
                         stateCurrent = BarbarianState.JOKER;
-                        dungeon.hide(newPosition);                        
+                        dungeon.hide(newPosition);
                     } else {
-                        stateCurrent = BarbarianState.GAMEOVER;                        
+                        stateCurrent = BarbarianState.GAMEOVER;
                     }
                 }
             default:

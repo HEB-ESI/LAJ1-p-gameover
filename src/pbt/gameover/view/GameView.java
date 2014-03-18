@@ -16,8 +16,11 @@
  */
 package pbt.gameover.view;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import pbt.gameover.model.BarbarianState;
 import pbt.gameover.model.Direction;
@@ -25,6 +28,7 @@ import pbt.gameover.model.DungeonPosition;
 import pbt.gameover.model.Game;
 import pbt.gameover.model.GameOverException;
 import pbt.gameover.model.Player;
+import pbt.gameover.model.PlayersIO;
 import pbt.gameover.model.WeaponType;
 
 import static pbt.gameover.view.Display.*;
@@ -75,14 +79,21 @@ public class GameView {
         int row, column;
         // Tentative de création d'un jeu
         try {
-            game = new Game("Juste", "Marlène", "François", "Pierre");
+            // Ajout de la gestion du paramètre
+            if (args.length == 1) {
+                Path p = Paths.get(args[0]);
+                List<Player> players = PlayersIO.read(p);
+                game = new Game(players);
+            } else {
+                game = new Game("Juste", "Marlène", "François", "Pierre");
+            }
             barbarianState = game.getStateCurrent();
         } catch (GameOverException e) {
             System.err.printf("Tentative abordée de création d'un jeu");
             System.exit(1);
         }
         // On joue
-        while (!game.isOver()) {            
+        while (!game.isOver()) {
             clear();
             display(game.getCurrentPlayer());
             display(game.getDungeon());
