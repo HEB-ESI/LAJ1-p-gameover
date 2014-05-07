@@ -287,6 +287,24 @@ public class Game {
         return stateCurrent;
     }
 
+    public BarbarianState playJokerPrincess() throws GameOverException{
+    	if (stateCurrent != BarbarianState.JOKER_PRINCESS){
+    		throw new GameOverException("Ce n'est pas le moment d'intenvertir "
+    				+ " les princesses");
+		}
+        if (idWinner != -1) {
+            throw new GameOverException("La partie est finie");
+        }
+        // On y va pour les princesses
+        jokerUsed = true;
+        DungeonPosition dp = dungeon.find(RoomType.PRINCESS,
+        		players.get(idCurrent).getColor());
+		// Je swappe les peux princesses
+		dungeon.swap(lastPosition, dp);
+		stateCurrent = play(lastPosition, null);
+		return stateCurrent;
+	}
+
     private BarbarianState play(DungeonPosition newPosition, WeaponType wt)
             throws GameOverException {
         if (!dungeon.getRoom(newPosition).isHidden()) {
@@ -308,15 +326,19 @@ public class Game {
             case KEY:
                 keyFound = true;
                 stateCurrent = BarbarianState.CONTINUE;
-                // lastPosition = newPosition;
                 checkIfIWin();
                 break;
             case PRINCESS:
                 princessFound
                         = players.get(idCurrent).getColor() == room.getColor();
                 stateCurrent = BarbarianState.CONTINUE;
-                //  lastPosition = newPosition;
                 checkIfIWin();
+                // Ajout pour la gestion de la modification
+                // Merci Sofian pour le !princessFound ;-) 
+                if (players.get(idCurrent).getColor() != room.getColor()
+                		&& !jokerUsed && !princessFound){
+                	stateCurrent = BarbarianState.JOKER_PRINCESS;
+				}
                 break;
             case BLORK:
                 WeaponType blorkWeakness = room.getWeapon();

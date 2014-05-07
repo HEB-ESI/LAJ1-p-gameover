@@ -70,6 +70,9 @@ public class GameView {
         STATE_REGEX.put(BarbarianState.JOKER, "[p0]{1}"
                 + "|[j]{1}\\s*[01234]{1}"
                 + "\\s*");
+        STATE_REGEX.put(BarbarianState.JOKER_PRINCESS, "[p0]{1}"
+                + "|[k]{1}\\s*"
+                + "\\s*");
         STATE_REGEX.put(BarbarianState.GAMEOVER, ".*");
     }
 
@@ -185,6 +188,18 @@ public class GameView {
                         // Je m'autorise un continue pour réitérer
                     }
                     break;
+                case 'k':
+                	// Le joker de la modif
+                	try {
+                		display("Rien à faire, je cherche la bonne princesse" 
+                				+ " pour toi …");
+                		barbarianState = game.playJokerPrincess();
+					} catch (GameOverException ex){
+                        display("Erreur (" + ex.getMessage() + ")\n");
+                        continue;
+                        // Je m'autorise un continue pour réitérer
+					}
+					break;
                 default:
                     display("Action non prise en charge (" + action + ")");
                     continue;
@@ -214,6 +229,7 @@ public class GameView {
         }
         Player winner = game.getWinner();
         displayWinner(winner);
+        display(game.getDungeon());
     }
 
 }
