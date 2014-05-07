@@ -42,6 +42,9 @@ public enum BarbarianState {
     BEAM_ME_UP,
     /** Je suis débutant, je vais jouer mon joker et reproposer une arme */
     JOKER,
+    /** Je suis débutant, je vais jouer le joker "change la couleur de la
+     * princesse*/
+    JOKER_PRINCESS,
     /** Hé, j'ai gagné ! */
     WIN;
 }

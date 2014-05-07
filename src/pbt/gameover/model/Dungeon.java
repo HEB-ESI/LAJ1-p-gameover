@@ -204,4 +204,28 @@ public class Dungeon {
         }
     }
 
+	/**
+	 * Cherche la pièce dont les données sont passée en paramètre
+	 * @param rt le type de pièce
+	 * @param bc sa couleur
+	 * @return la position de la première pièce correspondante trouvée ou null
+	 */
+	DungeonPosition find(RoomType rt, BarbarianColor bc){
+		boolean isFind = false;
+		DungeonPosition dp = null;
+		for (int i=0; i< N && !isFind; i++){
+			for (int j=0; j<N && !isFind; j++){
+				if (roomss[i][j].getColor() == bc 
+						&& roomss[i][j].getType() == rt){
+					isFind = true;
+					try {
+						dp = new DungeonPosition(i,j);
+					} catch (GameOverException ex) {
+						// Je sais que la position est valide
+					}
+				}
+			}
+		}
+		return dp;
+	}
 }

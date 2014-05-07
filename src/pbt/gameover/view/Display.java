@@ -291,6 +291,12 @@ public class Display {
                         + "Par exemple: j3\n\n"
                         + "→";
                 break;
+            case JOKER_PRINCESS:
+            	display = "\nJOKER_PRINCESS\n"
+            		+ "Entre k (ou exit):\n"
+            		+ "k = JOKER PRINCESS, p = PASS, 0 = EXIT\n"
+            		+ "→";
+            	break;
             default:
                 display = "GLUP ! (" + state + ")\n";
         }
