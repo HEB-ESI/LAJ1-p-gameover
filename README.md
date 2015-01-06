@@ -50,5 +50,7 @@ Les règles du jeu:
 *Énoncé* Nicolas Pettiaux <npettiaux@heb.be>  
 *Relecture* Marco Codutti <mcodutti@heb.be> et Catherine Leruste <cleruste@heb.be>
 
+![CC-BY-NC-SA](cc-by-nc-sa-80x15.png)
+
 
 
