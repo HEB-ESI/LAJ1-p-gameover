@@ -1,4 +1,4 @@
-#LAJ1 Projet « Game Over »
+# LAJ1 Projet « Game Over »
 
 Le projet est une implémentation du jeu « Game Over » dans le cadre des
 laboratoires java de BAC1 à HEB-ÉSI.
@@ -21,14 +21,14 @@ laboratoires java de BAC1 à HEB-ÉSI.
     |-------model
 
 
-##Ressources
+## Ressources
 
 Les règles du jeu:
 
 * le site [lahautroche] (http://www.lahauteroche.eu/gameover/gameover_home.html)
 * les règles [pdf](http://www.lahauteroche.eu/gameover/gameover_GRAFIK/montage%20regles_depliant.pdf)
 
-##Versions
+## Versions
 
 * v1 · Première version fonctionnelle du projet appelée aussi **phase 1**
      * Cette version se trouve dans la branche v1
@@ -44,7 +44,7 @@ Les règles du jeu:
 		   certains privilèges.
 * v3 · La version de l'examen du septembre
 
-##Auteurs
+## Auteurs
 
 *Code* Pierre Bettens <pbettens@heb.be>  
 *Énoncé* Nicolas Pettiaux <npettiaux@heb.be>  
